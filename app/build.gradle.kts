@@ -66,6 +66,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(project(":domain"))
+    implementation(project(":data"))
+
     //hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
@@ -73,6 +76,7 @@ dependencies {
     //retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
+
 
     //chucker
     debugImplementation ("com.github.chuckerteam.chucker:library:4.0.0")
@@ -87,5 +91,9 @@ dependencies {
     //orbit
     implementation("org.orbit-mvi:orbit-viewmodel:4.6.1")
     implementation("org.orbit-mvi:orbit-compose:4.6.1")
+
+    //acompanist
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
+
 
 }

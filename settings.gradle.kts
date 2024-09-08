@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Uzum Compose"
 include(":app")
- 
+include(":app:lib")
+include(":data")
+include(":domain")

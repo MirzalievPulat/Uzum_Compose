@@ -5,6 +5,8 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import uz.gita.uzumcompose.presentation.signUp.SignUpContract
+import uz.gita.uzumcompose.presentation.signUp.SignUpDirections
 import uz.gita.uzumcompose.presentation.splash.SplashContract
 import uz.gita.uzumcompose.presentation.splash.SplashDirections
 
@@ -13,5 +15,8 @@ import uz.gita.uzumcompose.presentation.splash.SplashDirections
 interface DirectionModule {
 
     @[Binds ViewModelScoped]
-    fun bindSignUpDirection(impl: SplashDirections): SplashContract.Direction
+    fun bindSplashDirection(impl: SplashDirections): SplashContract.Direction
+
+    @[Binds ViewModelScoped]
+    fun bindSignUpDirection(impl:SignUpDirections):SignUpContract.Direction
 }

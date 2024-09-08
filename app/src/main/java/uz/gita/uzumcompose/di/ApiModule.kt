@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import uz.gita.uzumcompose.data.remote.api.AuthApi
+import uz.gita.data.remote.api.AuthApi
 import javax.inject.Singleton
 
 
@@ -14,5 +14,5 @@ import javax.inject.Singleton
 class ApiModule {
 
     @[Provides Singleton]
-    fun providesAuthApi(retrofit: Retrofit):AuthApi = retrofit.create(AuthApi::class.java)
+    fun providesAuthApi(retrofit: Retrofit): uz.gita.data.remote.api.AuthApi = retrofit.create(uz.gita.data.remote.api.AuthApi::class.java)
 }

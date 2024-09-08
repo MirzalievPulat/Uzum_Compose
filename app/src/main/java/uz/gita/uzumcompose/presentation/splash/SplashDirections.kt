@@ -6,7 +6,7 @@ import uz.gita.uzumcompose.presentation.signUp.SignUpScreen
 import uz.gita.uzumcompose.utils.navigation.AppNavigator
 import javax.inject.Inject
 
-class SplashDirections @Inject constructor(val appNavigator: AppNavigator):SplashContract.Direction {
+class SplashDirections @Inject constructor(private val appNavigator: AppNavigator):SplashContract.Direction {
     override suspend fun moveToSignUp() {
         appNavigator.replace(SignUpScreen())
     }

@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Uzum Compose</string>
+    <string name="txt_welcome">Welcome \nto Uzum Bank</string>
+    <string name="btn_support">Support</string>
+    <string name="tf_phone_number">Phone number</string>
+    <string name="tf_password">Password</string>
+    <string name="tf_first_name">First name</string>
+    <string name="tf_last_name">Last name</string>
+    <string name="tf_date_of_birth">Date of birth</string>
+    <string name="txt_male">Male</string>
+    <string name="txt_female">Female</string>
+    <string name="btn_continue">Continue</string>
+    <string name="btn_sign_in">Sign in</string>
+    <string name="btn_sign_up">Sign up</string>
+    <string name="txt_sms_was_sent">"SMS was sent "</string>
+    <string name="txt_set_pin">Set a pin code to enter \nthe app</string>
+    <string name="txt_repeat_pin">Repeat PIN code to be \n sure</string>
+    <string name="txt_date_of_birth">Date of birth</string>
 </resources>

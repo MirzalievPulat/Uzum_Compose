@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,12 +15,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.hilt.getViewModel
+import kotlinx.coroutines.delay
+import org.orbitmvi.orbit.compose.collectAsState
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 
 class SplashScreen:Screen {
     @Composable
     override fun Content() {
+        val viewModel = getViewModel<SplashVM>()
+
         SplashScreenContent()
     }
 }

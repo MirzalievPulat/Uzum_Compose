@@ -1,20 +1,18 @@
 package uz.gita.uzumcompose.di
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import uz.gita.uzumcompose.data.locale.LocalStorage
-import uz.gita.uzumcompose.data.remote.api.AuthApi
-import uz.gita.uzumcompose.data.repository.AuthRepositoryImpl
-import uz.gita.uzumcompose.domain.repository.AuthRepository
+import uz.gita.data.repository.AuthRepositoryImpl
+import uz.gita.domain.repository.AuthRepository
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RepositoryModule {
+interface RepositoryModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideAuthRepository(api: AuthApi, localStorage: LocalStorage): AuthRepository = AuthRepositoryImpl(api, localStorage)
+    fun provideAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
 }

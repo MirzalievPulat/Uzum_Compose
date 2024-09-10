@@ -95,5 +95,6 @@ dependencies {
     //acompanist
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.1")
 
-
+    //dexter
+    implementation ("com.karumi:dexter:6.2.3")
 }

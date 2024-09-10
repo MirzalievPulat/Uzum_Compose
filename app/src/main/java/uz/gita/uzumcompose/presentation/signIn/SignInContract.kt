@@ -11,15 +11,7 @@ interface SignInContract {
     data class UIState(
         val isLoading:Boolean = false,
     )
-//    sealed interface UIState {
-//        object Loading : UIState
-//        object NoInternet : UIState
-//        data class DataState(
-//            val isEnable: Boolean = false,
-//            var isMale: Boolean = false,
-//            val isFeMale: Boolean = false
-//        ) : UIState
-//    }
+
 
     sealed interface SideEffect {
         data class ResultMessage(val message: String) : SideEffect
@@ -27,7 +19,7 @@ interface SignInContract {
 
     interface Direction {
         suspend fun moveToSignUp()
-        suspend fun moveToVerify()
+        suspend fun moveToVerify(phoneNumber:String)
     }
 
     interface Intent {

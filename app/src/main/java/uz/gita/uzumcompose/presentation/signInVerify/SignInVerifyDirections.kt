@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class SignInVerifyDirections @Inject constructor(private val appNavigator: AppNavigator): SignInVerifyContract.Direction {
     override suspend fun moveToPinScreen() {
-        appNavigator.navigateTo(PinScreen())
+        appNavigator.replaceAll(PinScreen())
     }
 
     override suspend fun moveBack() {

@@ -16,4 +16,12 @@
     <string name="txt_set_pin">Set a pin code to enter \nthe app</string>
     <string name="txt_repeat_pin">Repeat PIN code to be \n sure</string>
     <string name="txt_date_of_birth">Date of birth</string>
+    <string name="txt_connection_with_bank">Connection with bank</string>
+    <string name="txt_write_us_via_telegram">Write us via telegram</string>
+    <string name="txt_call">Call</string>
+    <string name="txt_our_number">+998 78 777 07 99</string>
+    <string name="btn_sms_is_not_comming">"Sms is not coming"</string>
+    <string name="txt_sms_not_coming_info">Your account will be reset. You will be able to restore your history, deposits, loans, accounts, wallets and \'My Home\' by adding the previously linked card again</string>
+    <string name="txt_send_code_again">Send code again</string>
+    <string name="txt_after_60_sec">You can send\nit again after 60 sec</string>
 </resources>

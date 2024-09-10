@@ -7,10 +7,10 @@ import javax.inject.Inject
 
 class SignUpDirections @Inject constructor(private val appNavigator: AppNavigator):SignUpContract.Direction {
     override suspend fun moveToSignIn() {
-        appNavigator.navigateTo(SignInScreen())
+        appNavigator.replace(SignInScreen())
     }
 
-    override suspend fun moveToVerify() {
-        appNavigator.navigateTo(SignUpVerifyScreen())
+    override suspend fun moveToVerify(phoneNumber:String) {
+        appNavigator.navigateTo(SignUpVerifyScreen(phoneNumber))
     }
 }

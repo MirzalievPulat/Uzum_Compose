@@ -63,7 +63,7 @@ fun AppTextButton(
 private fun Preview(modifier: Modifier = Modifier) {
     UzumComposeTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
-            Column {
+            Column(modifier = Modifier.fillMaxSize()) {
                 Spacer(modifier = Modifier.height(30.dp))
                 AppTextButton(onClick = {}, text = "Sign in",)
 

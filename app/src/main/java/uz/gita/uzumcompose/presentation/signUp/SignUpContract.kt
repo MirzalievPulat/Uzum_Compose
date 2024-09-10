@@ -27,7 +27,7 @@ interface SignUpContract {
 
     interface Direction {
         suspend fun moveToSignIn()
-        suspend fun moveToVerify()
+        suspend fun moveToVerify(phoneNumber:String)
     }
 
     interface Intent {

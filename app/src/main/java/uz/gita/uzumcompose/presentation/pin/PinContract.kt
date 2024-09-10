@@ -17,11 +17,12 @@ interface PinContract {
     }
 
     interface Direction {
-        suspend fun moveToRePinScreen()
-        suspend fun moveBack()
+        suspend fun moveToRePinScreen(code:String)
     }
 
     interface Intent {
-        object SelectBack:Intent
+        data class GoNextScreen(
+            val code1:String,
+        ):Intent
     }
 }

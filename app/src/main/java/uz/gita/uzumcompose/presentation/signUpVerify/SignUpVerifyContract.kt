@@ -1,6 +1,7 @@
 package uz.gita.uzumcompose.presentation.signUpVerify
 
 import org.orbitmvi.orbit.ContainerHost
+import kotlin.random.Random
 
 interface SignUpVerifyContract {
 
@@ -10,6 +11,8 @@ interface SignUpVerifyContract {
 
     data class UIState(
         val isLoading:Boolean = false,
+        val resendCode:Float = Random.nextFloat(),
+        val showProgress:Boolean = false
     )
 
     sealed interface SideEffect {
@@ -23,7 +26,9 @@ interface SignUpVerifyContract {
 
     interface Intent {
         object SelectResend:Intent
-        object SelectNotComing:Intent
+        data class GoToPin(
+            val code:String
+        ):Intent
         object SelectBack:Intent
     }
 }

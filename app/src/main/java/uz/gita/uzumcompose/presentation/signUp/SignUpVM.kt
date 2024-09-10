@@ -1,8 +1,10 @@
 package uz.gita.uzumcompose.presentation.signUp
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -12,6 +14,8 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import uz.gita.domain.model.request.AuthRequestModel
 import uz.gita.domain.useCase.SignUpUC
+import uz.gita.uzumcompose.utils.extensions.onFailure
+import uz.gita.uzumcompose.utils.extensions.onSuccess
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,9 +43,10 @@ class SignUpVM @Inject constructor(
                         intent.genderType.toString()
                     )
                 ).onStart { reduce { state.copy(isLoading = true) } }
+                    .onSuccess { directions.moveToVerify(intent.phone) }
+                    .onFailure { Log.d("TAG", "onEventDispatcher: ${it.message.toString()}") }
                     .onCompletion {
                         reduce { state.copy(isLoading = false) }
-                        directions.moveToVerify()
                     }
                     .launchIn(viewModelScope)
             }

@@ -7,7 +7,5 @@ import uz.gita.domain.repository.AuthRepository
 import uz.gita.domain.useCase.SignInUC
 
 class SignInUCImpl constructor(private val repository: AuthRepository): SignInUC {
-    override fun invoke(signInRequest: AuthRequestModel.SignIn): Flow<Result<Unit>> = flow{
-        emit(repository.signIn(signInRequest))
-    }
+    override fun invoke(signInRequest: AuthRequestModel.SignIn) = repository.signIn(signInRequest)
 }

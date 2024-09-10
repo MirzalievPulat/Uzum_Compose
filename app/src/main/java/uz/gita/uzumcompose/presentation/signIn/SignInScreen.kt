@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -38,11 +39,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.orbitmvi.orbit.compose.collectAsState
 import uz.gita.uzumcompose.R
+import uz.gita.uzumcompose.ui.components.AppBottomSheet
 import uz.gita.uzumcompose.ui.components.AppButton
 import uz.gita.uzumcompose.ui.components.AppTextButton
 import uz.gita.uzumcompose.ui.components.AppTextField
@@ -58,7 +61,6 @@ class SignInScreen : Screen {
         val viewModel: SignInContract.ViewModel = getViewModel<SignInVM>()
 
         UzumComposeTheme {
-
             SignInScreenContent(viewModel.collectAsState().value, viewModel::onEventDispatcher)
         }
     }
@@ -91,6 +93,7 @@ fun SignInScreenContent(
     var password by remember { mutableStateOf("") }
 
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
+    var isSheetVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = Unit) {
         focusRequester.requestFocus()
@@ -107,7 +110,16 @@ fun SignInScreenContent(
                 Spacer(modifier = Modifier.weight(1f))
                 AppTextButton(
                     text = stringResource(R.string.btn_support),
-                ) {}
+                ) {isSheetVisible = true}
+            }
+            //bottomsheet
+
+            if (isSheetVisible) {
+                AppBottomSheet(
+                    header = stringResource(R.string.btn_support),
+                    context = LocalContext.current,
+                    onDismissRequest = { isSheetVisible = false },
+                )
             }
 
             Column(
@@ -134,7 +146,7 @@ fun SignInScreenContent(
                     hint = stringResource(R.string.tf_phone_number),
                     value = phone,
                     onValueChange = {
-                        if (it.length <= 9) phone = it
+                        if (it.length <= 9 && (it.isDigitsOnly() || it == "")) phone = it
                     },
                     visualTransformation = MaskVisualTransformation(mask = "## ###-##-##"),
                     keyboardOptions = KeyboardOptions(
@@ -195,8 +207,8 @@ fun SignInScreenContent(
                 ) {
                     onEventDispatcher.invoke(
                         SignInContract.Intent.ClickContinue(
-                            password,
-                            phone,
+                            password = password,
+                            phone = "+998"+phone,
 
                             )
                     )

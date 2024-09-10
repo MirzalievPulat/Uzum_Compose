@@ -1,6 +1,8 @@
 package uz.gita.uzumcompose.presentation.repin
 
+import androidx.compose.ui.graphics.Color
 import org.orbitmvi.orbit.ContainerHost
+import uz.gita.uzumcompose.ui.theme.HintUzum
 
 interface RePinContract {
 
@@ -9,7 +11,8 @@ interface RePinContract {
     }
 
     data class UIState(
-        val isLoading:Boolean = false,
+        val errorAnim:Long = 0,
+        val dotsColor:Color = Color.HintUzum
     )
 
     sealed interface SideEffect {
@@ -23,5 +26,9 @@ interface RePinContract {
 
     interface Intent {
         object SelectBack:Intent
+        data class GoToMain(
+            val code1:String,
+            val code2:String
+        ):Intent
     }
 }

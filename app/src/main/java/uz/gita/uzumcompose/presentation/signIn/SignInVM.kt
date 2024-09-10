@@ -14,11 +14,13 @@ import uz.gita.domain.model.request.AuthRequestModel
 import uz.gita.domain.useCase.SignInUC
 import uz.gita.uzumcompose.presentation.signIn.SignInContract
 import uz.gita.uzumcompose.presentation.signIn.SignInDirections
+import uz.gita.uzumcompose.utils.extensions.onFailure
+import uz.gita.uzumcompose.utils.extensions.onSuccess
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInVM @Inject constructor(
-    private val signInUC: uz.gita.domain.useCase.SignInUC,
+    private val signInUC: SignInUC,
     private val directions: SignInDirections
 ) :ViewModel(), SignInContract.ViewModel{
 
@@ -32,14 +34,15 @@ class SignInVM @Inject constructor(
             }
             is SignInContract.Intent.ClickContinue->{
                 signInUC.invoke(
-                    uz.gita.domain.model.request.AuthRequestModel.SignIn(
-                        intent.phone,
-                        intent.password,
+                    AuthRequestModel.SignIn(
+                        phone = intent.phone,
+                        password = intent.password,
                     )
                 ).onStart { reduce { state.copy(isLoading = true) } }
+                    .onSuccess { directions.moveToVerify(intent.phone) }
+                    .onFailure {  }
                     .onCompletion {
                         reduce { state.copy(isLoading = false) }
-                        directions.moveToVerify()
                     }
                     .launchIn(viewModelScope)
             }

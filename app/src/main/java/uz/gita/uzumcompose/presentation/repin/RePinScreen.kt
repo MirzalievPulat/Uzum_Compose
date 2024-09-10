@@ -4,6 +4,7 @@ import android.content.Context.VIBRATOR_SERVICE
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
@@ -50,7 +51,6 @@ import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.orbitmvi.orbit.compose.collectAsState
 import uz.gita.uzumcompose.R
-import uz.gita.uzumcompose.presentation.pin.PinContract
 import uz.gita.uzumcompose.ui.components.DigitBuilder
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.HintUzum
@@ -58,12 +58,12 @@ import uz.gita.uzumcompose.ui.theme.PinkUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 
-class RePinScreen : Screen {
+class RePinScreen(val code1: String) : Screen {
     @Composable
     override fun Content() {
         val viewModel: RePinContract.ViewModel = getViewModel<RePinVM>()
         UzumComposeTheme {
-            RePinScreenContent(viewModel.collectAsState().value, viewModel::onEventDispatcher)
+            RePinScreenContent(code1,viewModel.collectAsState().value, viewModel::onEventDispatcher)
         }
     }
 }
@@ -72,12 +72,13 @@ class RePinScreen : Screen {
 @Composable
 fun RePinScreenPreview() {
     UzumComposeTheme {
-        RePinScreenContent(RePinContract.UIState(), {})
+        RePinScreenContent("",RePinContract.UIState(), {})
     }
 }
 
 @Composable
 fun RePinScreenContent(
+    code1:String,
     uiState: RePinContract.UIState,
     onEventDispatcher: (RePinContract.Intent) -> Unit
 ) {
@@ -96,31 +97,25 @@ fun RePinScreenContent(
     val transition = remember { Animatable(0f) }
 
     //error animation
-    LaunchedEffect(text) {
-        if (text != "8888" && text.length == 4) {
+    LaunchedEffect(uiState.errorAnim) {
+        Log.d("TAG", "RePinScreenContent1: ${uiState.errorAnim}")
+        if (uiState.errorAnim != 0L){
+            text = ""
+            Log.d("TAG", "RePinScreenContent2: ${uiState.errorAnim}")
             vibrator.cancel()
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val effect = VibrationEffect.createOneShot(700, VibrationEffect.DEFAULT_AMPLITUDE)
+                val effect = VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE)
                 vibrator.vibrate(effect)
             } else {
                 vibrator.vibrate(100)
             }
 
-            for (i in 0..39) {
-                when (i % 3) {
+            for (i in 0..9) {
+                when (i % 2) {
                     0 -> {
                         transition.animateTo(
                             9f,
-                            animationSpec = tween(
-                                durationMillis = 50,
-                                easing = LinearEasing
-                            )
-                        )
-                    }
-                    1->{
-                        transition.animateTo(
-                            190f,
                             animationSpec = tween(
                                 durationMillis = 50,
                                 easing = LinearEasing
@@ -140,12 +135,15 @@ fun RePinScreenContent(
                 }
             }
             transition.animateTo(0f)
-
-            text = ""
         }
 
     }
 
+
+    //check
+    if (text.length == 4){
+        onEventDispatcher.invoke(RePinContract.Intent.GoToMain(code1,text))
+    }
 
 
 
@@ -203,12 +201,8 @@ fun RePinScreenContent(
                         modifier = Modifier
                             .size(16.dp)
                             .background(
-                                color = if (text.length == 4) {
-                                    if (text == "8888") {
-                                        Color.Green
-                                    } else {
-                                        Color.Red
-                                    }
+                                color = if (text.length == 4 || text.length == 0) {
+                                    uiState.dotsColor
                                 } else if (text.length > i) Color.PinkUzum
                                 else Color.HintUzum,
                                 shape = CircleShape

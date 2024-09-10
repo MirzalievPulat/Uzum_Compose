@@ -7,7 +7,7 @@ import uz.gita.domain.repository.AuthRepository
 import uz.gita.domain.useCase.SignUpVerifyUC
 
 class SignUpVerifyUCImpl constructor(private val repository: AuthRepository): SignUpVerifyUC {
-    override fun invoke(signUpVerify: AuthRequestModel.SignUpVerify): Flow<Result<Unit>> = flow{
-        emit(repository.signUpVerify(signUpVerify))
-    }
+    override fun invoke(signUpVerify: AuthRequestModel.SignUpVerify) =
+       repository.signUpVerify(signUpVerify)
+
 }

@@ -102,12 +102,10 @@ fun PinScreenContent(
 
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Back arrow",
+                    contentDescription = "",
+                    tint = Color.Transparent,
                     modifier = Modifier
                         .clip(CircleShape)
-                        .clickable {
-                            onEventDispatcher.invoke(PinContract.Intent.SelectBack)
-                        }
                         .padding(8.dp)
                 )
             }
@@ -140,6 +138,11 @@ fun PinScreenContent(
                             )
                     )
                 }
+            }
+
+            //pin length check
+            if (text.length == 4){
+                onEventDispatcher.invoke(PinContract.Intent.GoNextScreen(text))
             }
 
 

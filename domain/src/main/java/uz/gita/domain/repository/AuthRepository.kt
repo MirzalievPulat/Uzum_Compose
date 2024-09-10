@@ -1,17 +1,19 @@
 package uz.gita.domain.repository
 
+import kotlinx.coroutines.flow.Flow
 import uz.gita.domain.model.request.AfterSplash
 import uz.gita.domain.model.request.AuthRequestModel
 
 interface AuthRepository {
-    suspend fun signUp(signUpRequest: AuthRequestModel.SignUp): Result<Unit>
-    suspend fun signIn(signInRequest: AuthRequestModel.SignIn): Result<Unit>
-    suspend fun signUpVerify(signUpVerifyRequest: AuthRequestModel.SignUpVerify): Result<Unit>
-    suspend fun signInVerify(signInVerifyRequest: AuthRequestModel.SignInVerify): Result<Unit>
-    suspend fun signUpResend(signUpResendRequest: AuthRequestModel.Resend): Result<Unit>
-    suspend fun signInResend(signInResendRequest: AuthRequestModel.Resend): Result<Unit>
-    suspend fun updateToken(updateTokenRequest: AuthRequestModel.UpdateToken): Result<Unit>
+    fun signUp(signUpRequest: AuthRequestModel.SignUp): Flow<Result<Unit>>
+    fun signIn(signInRequest: AuthRequestModel.SignIn): Flow<Result<Unit>>
+    fun signUpVerify(signUpVerifyRequest: AuthRequestModel.SignUpVerify): Flow<Result<Unit>>
+    fun signInVerify(signInVerifyRequest: AuthRequestModel.SignInVerify): Flow<Result<Unit>>
+    fun signUpResend(): Flow<Result<Unit>>
+    fun signInResend(): Flow<Result<Unit>>
+    fun updateToken(): Flow<Result<Unit>>
 
     fun getNextScreen():AfterSplash
     fun logOut()
+    fun setPin(pin:String)
 }

@@ -7,6 +7,7 @@ import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
 import uz.gita.domain.repository.AuthRepository
 import uz.gita.domain.useCase.GetNextScreenUC
+import uz.gita.domain.useCase.SetPinUC
 import uz.gita.domain.useCase.SignInResendUC
 import uz.gita.domain.useCase.SignInUC
 import uz.gita.domain.useCase.SignInVerifyUC
@@ -15,6 +16,7 @@ import uz.gita.domain.useCase.SignUpUC
 import uz.gita.domain.useCase.SignUpVerifyUC
 import uz.gita.domain.useCase.UpdateTokenUC
 import uz.gita.domain.useCase.impl.GetNextScreenUCImpl
+import uz.gita.domain.useCase.impl.SetPinUCImpl
 import uz.gita.domain.useCase.impl.SignInResendUCImpl
 import uz.gita.domain.useCase.impl.SignInUCImpl
 import uz.gita.domain.useCase.impl.SignInVerifyUCImpl
@@ -47,6 +49,7 @@ class UseCaseModule {
     fun provideSignInResendUC(repository: AuthRepository): SignInResendUC =
         SignInResendUCImpl(repository)
 
+
     @[Provides ViewModelScoped]
     fun provideSignUpResendUC(repository: AuthRepository): SignUpResendUC =
         SignUpResendUCImpl(repository)
@@ -58,4 +61,8 @@ class UseCaseModule {
     @[Provides ViewModelScoped]
     fun provideGetNextScreenUC(repository: AuthRepository): GetNextScreenUC =
         GetNextScreenUCImpl(repository)
+
+    @[Provides ViewModelScoped]
+    fun provideSetPinUC(repository: AuthRepository): SetPinUC =
+        SetPinUCImpl(repository)
 }

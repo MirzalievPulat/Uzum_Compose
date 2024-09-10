@@ -9,7 +9,5 @@ import uz.gita.domain.useCase.SignInUC
 import uz.gita.domain.useCase.SignUpResendUC
 
 class SignUpResendUCImpl constructor(private val repository: AuthRepository): SignUpResendUC {
-    override fun invoke(signUpResendRequest: AuthRequestModel.Resend): Flow<Result<Unit>> = flow{
-        emit(repository.signUpResend(signUpResendRequest))
-    }
+    override fun invoke() = repository.signUpResend()
 }

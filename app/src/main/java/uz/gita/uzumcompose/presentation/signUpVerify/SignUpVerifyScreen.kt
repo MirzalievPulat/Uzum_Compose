@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -28,8 +29,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,24 +46,27 @@ import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.orbitmvi.orbit.compose.collectAsState
 import uz.gita.uzumcompose.R
-import uz.gita.uzumcompose.presentation.signInVerify.SignInVerifyContract
+import uz.gita.uzumcompose.ui.components.AppBottomSheet
 import uz.gita.uzumcompose.ui.components.AppTextButton
+import uz.gita.uzumcompose.ui.components.PinViewComponent
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.HintUzum
 import uz.gita.uzumcompose.ui.theme.PinkUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
-import uz.gita.uzumcompose.ui.components.PinViewComponent
-import kotlin.random.Random
 
 
-class SignUpVerifyScreen : Screen {
+class SignUpVerifyScreen(val phoneNumber: String) : Screen {
     @Composable
     override fun Content() {
-        val viewModel:SignUpVerifyContract.ViewModel = getViewModel<SignUpVerifyVM>()
+        val viewModel: SignUpVerifyContract.ViewModel = getViewModel<SignUpVerifyVM>()
 
         UzumComposeTheme {
-            SignUpVerifyContent(viewModel.collectAsState().value,viewModel::onEventDispatcher)
+            SignUpVerifyContent(
+                phoneNumber,
+                viewModel.collectAsState().value,
+                viewModel::onEventDispatcher
+            )
         }
     }
 }
@@ -68,15 +75,16 @@ class SignUpVerifyScreen : Screen {
 @Composable
 fun SignUpVerifyPreview() {
     UzumComposeTheme {
-        SignUpVerifyContent(SignUpVerifyContract.UIState(),{})
+        SignUpVerifyContent("", SignUpVerifyContract.UIState(), {})
     }
 }
 
 //Phone number textfield
 @Composable
 fun SignUpVerifyContent(
-    uiState:SignUpVerifyContract.UIState,
-    onEventDispatcher:(SignUpVerifyContract.Intent)->Unit
+    phoneNumber: String,
+    uiState: SignUpVerifyContract.UIState,
+    onEventDispatcher: (SignUpVerifyContract.Intent) -> Unit
 ) {
 
     val systemUiController = rememberSystemUiController()
@@ -89,15 +97,15 @@ fun SignUpVerifyContent(
 
     var pinText by remember { mutableStateOf("") }
     var timeLeft by remember { mutableStateOf(60) }
-    var resendCode by remember { mutableStateOf(Random.nextFloat()) }
 
     val focusRequester by remember { mutableStateOf(FocusRequester()) }
+    var isSheetVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = Unit) {
         focusRequester.requestFocus()
     }
 
-    LaunchedEffect(resendCode) {
+    LaunchedEffect(uiState.resendCode) {
         object : CountDownTimer(60_000, 1_000) {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeft = (millisUntilFinished / 1000).toInt()
@@ -135,8 +143,18 @@ fun SignUpVerifyContent(
                         .padding(8.dp)
                 )
 
-                AppTextButton(text = "SMS is not coming") {
+                AppTextButton(text = stringResource(id = R.string.btn_sms_is_not_comming)) {
+                    isSheetVisible = true
+                }
+                //bottomsheet
 
+                if (isSheetVisible) {
+                    AppBottomSheet(
+                        header = stringResource(R.string.btn_sms_is_not_comming),
+                        infoText = stringResource(R.string.txt_sms_not_coming_info),
+                        context = LocalContext.current,
+                        onDismissRequest = { isSheetVisible = false },
+                    )
                 }
             }
 
@@ -157,7 +175,7 @@ fun SignUpVerifyContent(
                 )
 
                 Text(
-                    text = "+998 92 333-33-33",
+                    text = phoneNumber,
                     color = Color.BlackUzum,
                     fontFamily = fontFamilyUzum,
                     fontWeight = FontWeight.SemiBold,
@@ -173,13 +191,30 @@ fun SignUpVerifyContent(
                     pinText = pinText,
                     onPinTextChanged = {
                         pinText = it
+
+                        if (pinText.length == 6) {
+                            onEventDispatcher.invoke(SignUpVerifyContract.Intent.GoToPin(pinText))
+                        }
                     },
                     error = "",
                     focusRequester = focusRequester
 
                 )
 
-                Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(8.dp))
+
+                if (uiState.showProgress) {
+                    CircularProgressIndicator(
+                        color = Color.HintUzum,
+                        strokeCap = StrokeCap.Square,
+                        strokeWidth = 4.dp,
+                        modifier = Modifier.scale(0.5f)
+                    )
+                } else {
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Box(
                     modifier = Modifier
@@ -187,23 +222,21 @@ fun SignUpVerifyContent(
                         .padding(horizontal = 60.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = if (timeLeft == 0) "Send code again"
-                        else "You can send\nit again after $timeLeft sec",
-                        color = if (timeLeft == 0) Color.PinkUzum else Color.HintUzum,
-                        fontFamily = fontFamilyUzum,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center,
-                        style = TextStyle(lineHeight = 16.sp),
-                        modifier = Modifier.clickable(
-                            enabled = timeLeft == 0,
-                            onClick = {
-                                resendCode = Random.nextFloat()
-
-                            }
+                    if (timeLeft == 0) {
+                        AppTextButton(text = stringResource(R.string.txt_send_code_again)) {
+                            onEventDispatcher.invoke(SignUpVerifyContract.Intent.SelectResend)
+                        }
+                    } else {
+                        Text(
+                            text = stringResource(R.string.txt_after_60_sec).replace(oldValue = "60", newValue = timeLeft.toString()),
+                            color = Color.HintUzum,
+                            fontFamily = fontFamilyUzum,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Center,
+                            style = TextStyle(lineHeight = 16.sp),
                         )
-                    )
+                    }
                 }
             }
 

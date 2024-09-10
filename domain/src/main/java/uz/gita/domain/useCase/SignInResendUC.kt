@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.Flow
 import uz.gita.domain.model.request.AuthRequestModel
 
 interface SignInResendUC {
-    operator fun invoke(signInResendRequest: AuthRequestModel.Resend): Flow<Result<Unit>>
+    operator fun invoke(): Flow<Result<Unit>>
 }

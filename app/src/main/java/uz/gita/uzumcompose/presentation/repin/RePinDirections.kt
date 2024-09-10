@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class RePinDirections @Inject constructor(private val appNavigator: AppNavigator): RePinContract.Direction {
     override suspend fun moveToMainScreen() {
-        appNavigator.navigateTo(MainScreen())
+        appNavigator.replaceAll(MainScreen())
     }
 
     override suspend fun moveBack() {

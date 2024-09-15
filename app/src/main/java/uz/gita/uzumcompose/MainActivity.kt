@@ -22,7 +22,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import uz.gita.uzumcompose.presentation.splash.SplashScreen
+import uz.gita.uzumcompose.presentation.auth.splash.SplashScreen
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.utils.NetworkStatusValidator
 import uz.gita.uzumcompose.utils.navigation.NavigationHandler
@@ -31,22 +31,20 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-
     @Inject
     lateinit var navigationHandler:NavigationHandler
 
-
-//    @Inject
-//    lateinit var networkStatusValidator: NetworkStatusValidator
+    @Inject
+    lateinit var networkStatusValidator: NetworkStatusValidator
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        networkStatusValidator.listenNetworkStatus(
-//            onAvailable = {},
-//            onLost = {}
-//        )
+        networkStatusValidator.listenNetworkStatus(
+            onAvailable = {},
+            onLost = {}
+        )
 
         setContent {
             UzumComposeTheme {

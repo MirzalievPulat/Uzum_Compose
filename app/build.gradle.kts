@@ -65,9 +65,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
     implementation(project(":domain"))
-    implementation(project(":data"))
+    implementation(project(":common"))
 
     //hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
@@ -78,9 +77,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
 
 
-    //chucker
-    debugImplementation ("com.github.chuckerteam.chucker:library:4.0.0")
-    releaseImplementation ("com.github.chuckerteam.chucker:library-no-op:4.0.0")
+
 
     //voyager
     val voyagerVersion = "1.1.0-beta02"
@@ -97,4 +94,6 @@ dependencies {
 
     //dexter
     implementation ("com.karumi:dexter:6.2.3")
+
+    implementation ("androidx.compose.ui:ui-tooling")
 }

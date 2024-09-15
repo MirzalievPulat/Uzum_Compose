@@ -20,7 +20,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import uz.gita.uzumcompose.presentation.signUp.SignUpContract
 import uz.gita.uzumcompose.ui.theme.PinkUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum

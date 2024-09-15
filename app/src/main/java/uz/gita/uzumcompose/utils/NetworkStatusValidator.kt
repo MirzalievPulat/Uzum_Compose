@@ -11,9 +11,10 @@ import javax.inject.Singleton
 
 @Singleton
 class NetworkStatusValidator @Inject constructor(@ApplicationContext val context: Context) {
-
-    var isNetworkEnabled: Boolean = false
+    companion object{
+        var isNetworkEnabled: Boolean = false
         private set
+    }
 
     fun listenNetworkStatus(onAvailable: () -> Unit, onLost: () -> Unit) {
         val networkRequest = NetworkRequest.Builder()

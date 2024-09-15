@@ -3,6 +3,7 @@ package uz.gita.uzumcompose.ui.components
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.Button
@@ -28,7 +32,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -42,13 +48,15 @@ import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.HintUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
+import uz.gita.uzumcompose.utils.NetworkStatusValidator
+import uz.gita.uzumcompose.utils.helper.ShimmerEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBottomSheet(
     header: String,
+    context: Context? = null,
     infoText: String? = null,
-    context: Context,
     onDismissRequest: () -> Unit,
 ) {
 
@@ -58,97 +66,60 @@ fun AppBottomSheet(
             skipPartiallyExpanded = true
         )
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp, bottom = 80.dp)
-        ) {
-            Text(
-                text = header,
-                color = Color.BlackUzum,
-                fontFamily = fontFamilyUzum,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.align(Alignment.Start),
-                textAlign = TextAlign.Center,
-                fontSize = 24.sp
-            )
-
-            infoText?.let {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = infoText,
-                    color = Color.BlackUzum,
-                    fontFamily = fontFamilyUzum,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.align(Alignment.Start),
-                    fontSize = 15.sp
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-
-            Row(
+        if (NetworkStatusValidator.isNetworkEnabled){
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/UzumBank_Robot"))
-                        context.startActivity(browserIntent)
-                        onDismissRequest.invoke()
-                    }
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_telegram_24),
-                    contentDescription = "tg"
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-
                 Text(
-                    text = stringResource(R.string.txt_write_us_via_telegram),
-                    style = TextStyle(
+                    text = header,
+                    color = Color.BlackUzum,
+                    fontFamily = fontFamilyUzum,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.align(Alignment.Start),
+                    textAlign = TextAlign.Center,
+                    fontSize = 24.sp
+                )
+
+                infoText?.let {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = infoText,
+                        color = Color.BlackUzum,
                         fontFamily = fontFamilyUzum,
                         fontWeight = FontWeight.Medium,
-                        fontSize = 15.sp,
+                        modifier = Modifier.align(Alignment.Start),
+                        fontSize = 15.sp
                     )
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
-                    contentDescription = "right",
-                    tint = Color.HintUzum,
-                    modifier = Modifier.padding(8.dp)
-                )
-            }
-
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:+998 78 777 07 99"))
-                    context.startActivity(intent)
-                    onDismissRequest.invoke()
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
-            ) {
+
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable {
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/UzumBank_Robot"))
+                            context!!.startActivity(browserIntent)
+                            onDismissRequest.invoke()
+                        }
+                        .padding(vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_call_24),
+                        painter = painterResource(id = R.drawable.ic_telegram_24),
                         contentDescription = "tg"
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(12.dp))
 
                     Text(
-                        text = stringResource(R.string.txt_call),
+                        text = stringResource(R.string.txt_write_us_via_telegram),
                         style = TextStyle(
                             fontFamily = fontFamilyUzum,
                             fontWeight = FontWeight.Medium,
                             fontSize = 15.sp,
                         )
                     )
-
-
                     Spacer(modifier = Modifier.weight(1f))
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
@@ -158,33 +129,147 @@ fun AppBottomSheet(
                     )
                 }
 
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:+998 78 777 07 99"))
+                        context!!.startActivity(intent)
+                        onDismissRequest.invoke()
+                    }
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_call_24),
+                            contentDescription = "tg"
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Text(
+                            text = stringResource(R.string.txt_call),
+                            style = TextStyle(
+                                fontFamily = fontFamilyUzum,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 15.sp,
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.weight(1f))
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                            contentDescription = "right",
+                            tint = Color.HintUzum,
+                            modifier = Modifier.padding(start = 8.dp, top = 8.dp, end = 8.dp, bottom = 0.dp)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_call_24),
+                            contentDescription = "tg",
+                            tint = Color.Transparent
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = stringResource(R.string.txt_our_number),
+                            style = TextStyle(
+                                fontFamily = fontFamilyUzum,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp,
+                                color = Color.HintUzum
+                            )
+                        )
+
+
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                }
+            }
+        }else{
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
+            ){
+                Text(
+                    text = header,
+                    color = Color.BlackUzum,
+                    fontFamily = fontFamilyUzum,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.align(Alignment.Start),
+                    textAlign = TextAlign.Center,
+                    fontSize = 24.sp
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_call_24),
-                        contentDescription = "tg",
-                        tint = Color.Transparent
+                    ShimmerEffect(modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(8.dp))
                     )
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    Text(
-                        text = stringResource(R.string.txt_our_number),
-                        style = TextStyle(
-                            fontFamily = fontFamilyUzum,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 14.sp,
-                            color = Color.HintUzum
-                        )
+                    ShimmerEffect(modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp)
+                        .clip(RoundedCornerShape(8.dp))
                     )
 
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                    Spacer(modifier = Modifier.weight(1f))
+                    ShimmerEffect(modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ShimmerEffect(modifier = Modifier
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    ShimmerEffect(modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    ShimmerEffect(modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .clip(RoundedCornerShape(8.dp))
+
+                    )
                 }
             }
         }
+
+
     }
 }
 /*
@@ -240,13 +325,14 @@ private fun AppPreview() {
                 ) {
 
             }
-//            if (isVisible) {
-//                AppBottomSheet(
-//                    header = "Sms is not coming",
-//                    infoText = stringResource(R.string.txt_sms_is_not_comming),
-//                    onDismissRequest = { isVisible = false },
-//                )
-//            }
+            if (isVisible) {
+                AppBottomSheet(
+                    header = "Sms is not coming",
+                    onDismissRequest = { isVisible = false },
+//                    context = LocalContext.current,
+//                    networkStatusValidator = NetworkStatusValidator(LocalContext.current)
+                )
+            }
 
         }
     }

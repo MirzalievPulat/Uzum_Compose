@@ -5,10 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -23,8 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import uz.gita.uzumcompose.presentation.signUp.SignUpContract
-import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.PinkUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
@@ -35,7 +31,7 @@ fun AppTextButton(
     modifier: Modifier = Modifier,
     color: Color = Color.PinkUzum,
     textAlign: TextAlign = TextAlign.Center,
-    clickEnabled:Boolean = true,
+    clickEnabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Text(
@@ -49,7 +45,7 @@ fun AppTextButton(
             .height(50.dp)
             .background(Color.Transparent, shape = RoundedCornerShape(16.dp))
             .clip(RoundedCornerShape(16.dp))
-            .clickable(enabled = clickEnabled){
+            .clickable(enabled = clickEnabled) {
                 onClick.invoke()
             }
             .padding(horizontal = 16.dp)
@@ -65,7 +61,7 @@ private fun Preview(modifier: Modifier = Modifier) {
         Surface(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Spacer(modifier = Modifier.height(30.dp))
-                AppTextButton(onClick = {}, text = "Sign in",)
+                AppTextButton(onClick = {}, text = "Sign in")
 
             }
         }

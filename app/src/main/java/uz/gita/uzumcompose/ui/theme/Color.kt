@@ -15,7 +15,8 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 
-val  Color.Companion.PinkUzum :Color get() =  Color(0xFFCD25DC)
+val  Color.Companion.PinkUzum :Color get() =  Color(0xFF7025fb)
+//val  Color.Companion.PinkUzum :Color get() =  Color(0xFFCD25DC)
 val  Color.Companion.BlackUzum :Color get() =  Color(0xFF101010)
 val  Color.Companion.HintUzum :Color get() =  Color(0xFFAFAFAF)
 val  Color.Companion.TextField :Color get() =  Color(0xFFEAECEE)

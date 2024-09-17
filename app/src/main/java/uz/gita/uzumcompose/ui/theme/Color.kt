@@ -20,6 +20,7 @@ val  Color.Companion.PinkUzum :Color get() =  Color(0xFF7025fb)
 val  Color.Companion.BlackUzum :Color get() =  Color(0xFF101010)
 val  Color.Companion.HintUzum :Color get() =  Color(0xFFAFAFAF)
 val  Color.Companion.TextField :Color get() =  Color(0xFFEAECEE)
+
 /*<color name="text_primary">#101010</color>
     <color name="text_hint">#AFAFAF</color>
     <color name="text_pink">#CD25DC</color>*/

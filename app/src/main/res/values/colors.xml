@@ -9,6 +9,10 @@
     <color name="uzum_black">#FF101010</color>
     <color name="white">#FFFFFFFF</color>
     <color name="static_green">#09b849</color>
+    <color name="dark_green">#037708</color>
     <color name="g1">#ff4f31ac</color>
     <color name="g2">#ff896ae7</color>
+    <color name="pink2">#ffA07AE7</color>//7025fb
+    <color name="pink">#ff7025fb</color>//7025fb
+    <color name="icon_white_pink">#CFBCF3</color>
 </resources>

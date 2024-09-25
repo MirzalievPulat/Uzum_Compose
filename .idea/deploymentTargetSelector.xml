@@ -5,16 +5,16 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SignInVerifyPreview">
+      <SelectionState runConfigName="HomePreview">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SignInScreenPreview">
+      <SelectionState runConfigName="CashbackMonitoringSection">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="AppPreview">
+      <SelectionState runConfigName="FastAccessSection">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="SignUpVerifyPreview">
+      <SelectionState runConfigName="BillBoardSection">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

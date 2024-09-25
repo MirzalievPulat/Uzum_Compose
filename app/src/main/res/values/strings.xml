@@ -24,4 +24,12 @@
     <string name="txt_sms_not_coming_info">Your account will be reset. You will be able to restore your history, deposits, loans, accounts, wallets and \'My Home\' by adding the previously linked card again</string>
     <string name="txt_send_code_again">Send code again</string>
     <string name="txt_after_60_sec">You can send\nit again after 60 sec</string>
+    <string name="bottom_nav_home">Main</string>
+    <string name="bottom_nav_transfer">Transfer</string>
+    <string name="bottom_nav_payment">Payment</string>
+    <string name="bottom_nav_messages">Messages</string>
+    <string name="bottom_nav_menu">Menu</string>
+    <string name="searchBar_text">Search</string>
+    <string name="txt_fast_access">Fast access</string>
+    <string name="txt_local_payments">Local payments</string>
 </resources>

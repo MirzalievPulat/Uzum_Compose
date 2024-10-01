@@ -13,5 +13,26 @@ sealed interface CardData {
         val expiredMonth: String = "",
         val themeType: String = "",
         val isVisible: String = ""
-    ):CardData
+    )
+
+    data class CardMessage(val message:String)
+
+
+    data class NewCardParams(
+        val pan: String,
+        @SerializedName("expired-year")
+        val expiredYear: String,
+        @SerializedName("expired-month")
+        val expiredMonth: String,
+        val name: String
+    )
+
+    data class UpdateCardParams(
+        val id: String,
+        val name: String,
+        @SerializedName("theme-type")
+        val themeType: String,
+        @SerializedName("is-visible")
+        val isVisible: String
+    )
 }

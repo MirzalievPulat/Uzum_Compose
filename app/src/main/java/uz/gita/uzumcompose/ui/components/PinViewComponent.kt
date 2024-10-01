@@ -51,7 +51,7 @@ fun PinViewComponent(
     pinText: String = "",
     onPinTextChanged: (String) -> Unit = {},
     digitCount: Int = 6,
-    error: String = "",
+    error: String? = null,
     focusRequester: FocusRequester = FocusRequester()
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -80,7 +80,7 @@ fun PinViewComponent(
                 decorationBox = {
                     Row(horizontalArrangement = Arrangement.SpaceEvenly) {
                         repeat(digitCount) { index ->
-                            DigitView(index, pinText,error.isNotBlank())
+                            DigitView(index, pinText,error != null)
                             Spacer(modifier = Modifier.width(8.dp))
                         }
                     }
@@ -89,7 +89,7 @@ fun PinViewComponent(
                 modifier = Modifier.focusRequester(focusRequester)
             )
 
-            if (error.isNotBlank()) {
+            error?.let {
                 Spacer(Modifier.height(12.dp))
                 Text(text = error,
                     fontFamily = fontFamilyUzum,

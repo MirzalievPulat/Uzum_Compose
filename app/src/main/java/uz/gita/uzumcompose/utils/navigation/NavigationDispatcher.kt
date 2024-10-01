@@ -6,10 +6,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NavigationDispatcher @Inject constructor():AppNavigator,NavigationHandler{
+class NavigationDispatcher @Inject constructor(): AppNavigator, NavigationHandler {
     override val navigationStack = MutableSharedFlow<NavigationArgs>()
 
-    private suspend fun navigate(args:NavigationArgs){
+    private suspend fun navigate(args: NavigationArgs){
         navigationStack.emit(args)
     }
 

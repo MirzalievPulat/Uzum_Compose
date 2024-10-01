@@ -22,7 +22,7 @@ interface HomeApi {
     suspend fun getFullInfo():Response<HomeResponse.FullInfo>
 
     @PUT("v1/home/user-info")
-    suspend fun updateInfo(@Body updateInfo: HomeRequest.UpdateInfo):Response<HomeResponse.FullInfo>
+    suspend fun updateInfo(@Body updateInfo: HomeRequest.UpdateInfo):Response<HomeResponse.UpdateInfo>
 
     @GET("v1/home/user-info")
     suspend fun lastTransfers():Response<List<HomeResponse.TransferInfo>>

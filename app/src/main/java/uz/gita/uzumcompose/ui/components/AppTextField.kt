@@ -103,14 +103,14 @@ fun AppTextField(
 
                 errorText?.let {
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = errorText,
-                        style = TextStyle(
-                            fontFamily = fontFamilyUzum,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.Red
-                        ),
+                    Text(
+                        text = errorText,
+                        fontFamily = fontFamilyUzum,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 12.sp,
+                        color = Color.Red,
+                        lineHeight = 16.sp,
                         modifier = Modifier.padding(start = 16.dp),
-                        maxLines = 1
                     )
                 }
 
@@ -133,7 +133,7 @@ fun Preview() {
                 onValueChange = {
 
                 },
-                errorText = "asdsdf",
+                errorText = "asdsdf\nasdf",
                 leadingIcon = {
                     Text(
                         text = "+998",

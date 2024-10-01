@@ -3,6 +3,7 @@ package uz.gita.data.extension
 import com.google.gson.Gson
 import retrofit2.Response
 import uz.gita.data.model.response.AuthResponse
+import uz.gita.data.model.response.ErrorResponse
 
 private val gson = Gson()
 
@@ -13,7 +14,7 @@ suspend fun <T, R> Response<T>.toResult(successBlock: suspend (T) -> R): Result<
         }
 
         errorBody() != null -> {
-            val errorResponse = gson.fromJson(errorBody()!!.string(), AuthResponse.Error::class.java)
+            val errorResponse = gson.fromJson(errorBody()!!.string(), ErrorResponse::class.java)
             Result.failure(Exception(errorResponse.message))
         }
 

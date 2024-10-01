@@ -8,13 +8,14 @@ import uz.gita.uzumcompose.utils.navigation.AppNavigator
 import uz.gita.uzumcompose.utils.navigation.NavigationDispatcher
 import uz.gita.uzumcompose.utils.navigation.NavigationHandler
 
+
 @Module
 @InstallIn(SingletonComponent::class)
 interface NavigationModule {
 
     @Binds
-    fun providesAppNavigator(dispatcher: NavigationDispatcher):AppNavigator
+    fun providesAppNavigator(dispatcher: NavigationDispatcher): AppNavigator
 
     @Binds
-    fun providesNavigationHandler(dispatcher: NavigationDispatcher):NavigationHandler
+    fun providesNavigationHandler(dispatcher: NavigationDispatcher): NavigationHandler
 }

@@ -17,11 +17,11 @@ interface CardApi {
     suspend fun getCards():Response<List<CardResponse.CardInfo>>
 
     @POST("v1/card")
-    suspend fun addCard(@Body addCard: CardRequest.AddCard):Response<CardResponse.AddCard>
+    suspend fun addCard(@Body addCard: CardRequest.AddCard):Response<CardResponse.CardMessage>
 
     @PUT("v1/card")
-    suspend fun updateCard(@Body updateCard: CardRequest.UpdateCard):Response<CardResponse.UpdateCard>
+    suspend fun updateCard(@Body updateCard: CardRequest.UpdateCard):Response<CardResponse.CardMessage>
 
     @DELETE("v1/card{id}")
-    suspend fun deleteCard(@Path("id") id:Int):Response<CardResponse.DeleteCard>
+    suspend fun deleteCard(@Path("id") id:String):Response<CardResponse.CardMessage>
 }

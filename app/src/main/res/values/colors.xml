@@ -7,6 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="uzum_black">#FF101010</color>
+    <color name="hint_uzum">#FFa0a4a7</color>
     <color name="white">#FFFFFFFF</color>
     <color name="static_green">#09b849</color>
     <color name="dark_green">#037708</color>

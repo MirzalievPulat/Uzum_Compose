@@ -10,7 +10,7 @@ sealed interface CardRequest {
         @SerializedName("expired-month")
         val expiredMonth: String,
         val name: String
-    ) : CardRequest
+    )
 
     data class UpdateCard(
         val id: String,
@@ -19,7 +19,7 @@ sealed interface CardRequest {
         val themeType: String,
         @SerializedName("is-visible")
         val isVisible: String
-    ) : CardRequest
+    )
 
 
 }

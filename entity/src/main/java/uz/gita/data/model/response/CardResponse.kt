@@ -17,9 +17,7 @@ sealed interface CardResponse {
         val themeType: String,
         @SerializedName("is-visible")
         val isVisible: String
-    ):CardResponse
+    )
 
-    data class AddCard(val message:String):CardResponse
-    data class UpdateCard(val message:String):CardResponse
-    data class DeleteCard(val message:String):CardResponse
+    data class CardMessage(val message:String)
 }

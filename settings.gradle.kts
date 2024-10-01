@@ -23,6 +23,6 @@ rootProject.name = "Uzum Compose"
 include(":app")
 include(":app:lib")
 include(":entity")
-include(":olddomain")
 include(":common")
 include(":domain")
+include(":presentation")

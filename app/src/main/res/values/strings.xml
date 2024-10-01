@@ -32,4 +32,17 @@
     <string name="searchBar_text">Search</string>
     <string name="txt_fast_access">Fast access</string>
     <string name="txt_local_payments">Local payments</string>
+    <string name="txt_mobile_number">Mobile Number</string>
+    <string name="txt_saved_payments">Saved payments</string>
+    <string name="txt_add">Add</string>
+    <string name="txt_history">History</string>
+    <string name="txt_transfer">Transfer</string>
+    <string name="txt_before_shapes">Here we will save your most frequent transfers to cards</string>
+    <string name="txt_all_services">All services</string>
+    <string name="txt_popular">Popular</string>
+    <string name="txt_new_card">New card</string>
+    <string name="txt_next">Next</string>
+    <string name="txt_customer_support">Customer Support</string>
+    <string name="txt_online">Online</string>
+    <string name="txt_customer_support_info">Hello! This is the support service of Uzum Bank. Write us any question and we\'ll be happy to help you.</string>
 </resources>

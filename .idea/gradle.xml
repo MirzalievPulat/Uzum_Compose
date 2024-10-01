@@ -14,7 +14,7 @@
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/entity" />
-            <option value="$PROJECT_DIR$/olddomain" />
+            <option value="$PROJECT_DIR$/presentation" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

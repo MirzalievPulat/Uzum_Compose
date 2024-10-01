@@ -5,7 +5,9 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SelectableDates
@@ -50,6 +51,7 @@ import java.util.Locale
 @Composable
 fun DatePickerModal(
     onDateSelected: (Long?) -> Unit,
+    errorText: String? = null
 ) {
     val datePickerState = rememberDatePickerState(
         selectableDates = PastOrPresentSelectableDates,
@@ -79,49 +81,65 @@ fun DatePickerModal(
                 }
             }
         ) {
-            DatePicker(state = datePickerState,
+            DatePicker(
+                state = datePickerState,
                 showModeToggle = false,
             )
         }
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .background(color = Color.TextField)
-            .height(50.dp)
-            .padding(start = 12.dp, end = 6.dp)
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = {
-                    isDatePickerShowed.value = true
-                }),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = textDate.value,
-            style = TextStyle(
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(color = Color.TextField)
+                .height(50.dp)
+                .padding(start = 12.dp, end = 6.dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = {
+                        isDatePickerShowed.value = true
+                    }),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = textDate.value,
+                style = TextStyle(
+                    fontFamily = fontFamilyUzum,
+                    fontWeight = FontWeight.Medium,
+                    color = if (textDate.value == s) Color.HintUzum else Color.BlackUzum,
+                    fontSize = 14.sp,
+                ),
+                modifier = Modifier
+                    .weight(1f)
+            )
+
+            Icon(
+                imageVector = Icons.Rounded.DateRange,
+                contentDescription = "icon date",
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable { isDatePickerShowed.value = true }
+                    .padding(8.dp)
+            )
+
+        }
+
+        errorText?.let {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = errorText,
                 fontFamily = fontFamilyUzum,
                 fontWeight = FontWeight.Medium,
-                color = if (textDate.value == s) Color.HintUzum else Color.BlackUzum,
-                fontSize = 14.sp,
-            ),
-            modifier = Modifier
-                .weight(1f)
-        )
-
-        Icon(
-            imageVector = Icons.Rounded.DateRange,
-            contentDescription = "icon date",
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable { isDatePickerShowed.value = true }
-                .padding(8.dp)
-        )
-
+                fontSize = 12.sp,
+                color = Color.Red,
+                modifier = Modifier.padding(start = 16.dp),
+            )
+        }
     }
+
 }
 
 fun convertMillisToDate(millis: Long): String {

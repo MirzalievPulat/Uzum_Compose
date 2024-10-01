@@ -22,7 +22,10 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
     override suspend fun signUp(signUp: AuthData.SignUp): Result<Unit> = withContext(Dispatchers.IO) {
         api.signUp(signUp.toRequest())
-            .toResult { localStorage.token = it.token }
+            .toResult {
+                localStorage.token = it.token
+                localStorage.name = signUp.firstName
+            }
     }
 
     override fun signIn(signIn: AuthData.SignIn): Flow<Result<Unit>> = flow {
@@ -35,12 +38,11 @@ class AuthRepositoryImpl @Inject constructor(
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)
 
     override fun signUpVerify(verify: AuthData.Verify): Flow<Result<Unit>> = flow {
-        val result = api.signUpVerify(AuthRequest.Verify(localStorage.token,verify.code))
+        val result
+        = api.signUpVerify(AuthRequest.Verify(localStorage.token,verify.code))
             .toResult {
                 localStorage.refreshToken = it.refreshToken
                 localStorage.accessToken = it.accessToken
-
-                localStorage.afterSplash = AfterSplash.PIN
             }
 
         emit(result)
@@ -51,8 +53,6 @@ class AuthRepositoryImpl @Inject constructor(
             .toResult {
             localStorage.refreshToken = it.refreshToken
             localStorage.accessToken = it.accessToken
-
-            localStorage.afterSplash = AfterSplash.PIN
         }
 
         emit(result)
@@ -98,6 +98,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun setPin(pin: String): Flow<Result<Unit>> = flow {
         localStorage.pin = pin
+        localStorage.afterSplash = AfterSplash.PIN
         emit(Result.success(Unit))
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)
 

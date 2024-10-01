@@ -13,7 +13,11 @@ class LocalStorage @Inject constructor(@ApplicationContext context: Context) : S
     var accessToken: String by strings("")
 
     var pin: String by strings("")
+    var lastTotalBalance: String by strings()
+    var cardList:String by strings()
+
     var phone: String by strings()
+    var name: String by strings()
 
     private var _afterSplash: String by strings(AfterSplash.SIGN_UP.name)
     var afterSplash: AfterSplash

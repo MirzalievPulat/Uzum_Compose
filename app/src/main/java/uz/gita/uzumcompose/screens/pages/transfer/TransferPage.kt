@@ -48,6 +48,8 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.uzumcompose.R
+import uz.gita.uzumcompose.screens.main.PolatTab
+import uz.gita.uzumcompose.screens.main.PolatTabOptions
 import uz.gita.uzumcompose.ui.components.AppTextField
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.HintUzum
@@ -55,18 +57,19 @@ import uz.gita.uzumcompose.ui.theme.TextField
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 
-class TransferPage : Tab {
-    override val options: TabOptions
+object TransferPage : PolatTab {
+    override val polatTabOptions: PolatTabOptions
         @Composable
         get() {
             val title = stringResource(R.string.bottom_nav_transfer)
-            val icon = rememberVectorPainter(image = ImageVector.vectorResource(R.drawable.ic_transfer))
+            val selectedIcon = rememberVectorPainter(image = ImageVector.vectorResource(R.drawable.ic_transfer_active))
+            val unSelectedIcon = rememberVectorPainter(image = ImageVector.vectorResource(R.drawable.ic_transfer))
 
             return remember {
-                TabOptions(
+                PolatTabOptions(
                     index = 1u,
                     title = title,
-                    icon = icon
+                    selectedIcon, unSelectedIcon
                 )
             }
         }

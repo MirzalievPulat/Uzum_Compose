@@ -3,7 +3,6 @@ package uz.gita.uzumcompose.ui.components
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -43,18 +41,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import uz.gita.presentation.helper.NetworkStatusValidator
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.HintUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
-import uz.gita.uzumcompose.utils.NetworkStatusValidator
-import uz.gita.uzumcompose.utils.helper.ShimmerEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppBottomSheet(
     header: String,
+    networkStatusValidator: NetworkStatusValidator,
     context: Context? = null,
     infoText: String? = null,
     onDismissRequest: () -> Unit,
@@ -66,7 +64,7 @@ fun AppBottomSheet(
             skipPartiallyExpanded = true
         )
     ) {
-        if (NetworkStatusValidator.isNetworkEnabled){
+        if (networkStatusValidator.isNetworkEnabled){
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -272,42 +270,7 @@ fun AppBottomSheet(
 
     }
 }
-/*
-fun getPermission(
-    context: Context,
-    havePermission: () -> Unit
-) {
-    Dexter.withContext(context)
-        .withPermissions(Manifest.permission.CALL_PHONE)
-        .withListener(object : MultiplePermissionsListener {
-            override fun onPermissionsChecked(p0: MultiplePermissionsReport) {
-                if (p0.areAllPermissionsGranted()) {
-                    havePermission.invoke()
-                } else if (!shouldShowRequestPermissionRationale(context as Activity, Manifest.permission.CALL_PHONE)) {
 
-                    AlertDialog.Builder(context).apply {
-                        setMessage("Please go to settings to give permission")
-                        setPositiveButton("OK") { dialog, which ->
-                            val intent = Intent(
-                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.fromParts("package", context.packageName, null)
-                            )
-                            context.startActivity(intent)
-                            dialog.dismiss()
-                        }
-                    }.show()
-
-                }
-            }
-
-            override fun onPermissionRationaleShouldBeShown(
-                p0: MutableList<com.karumi.dexter.listener.PermissionRequest>?,
-                p1: PermissionToken
-            ) {
-                p1.continuePermissionRequest()
-            }
-        }).check()
-}*/
 
 @Preview
 @Composable
@@ -325,14 +288,13 @@ private fun AppPreview() {
                 ) {
 
             }
-            if (isVisible) {
-                AppBottomSheet(
-                    header = "Sms is not coming",
-                    onDismissRequest = { isVisible = false },
-//                    context = LocalContext.current,
-//                    networkStatusValidator = NetworkStatusValidator(LocalContext.current)
-                )
-            }
+//            if (isVisible) {
+//                AppBottomSheet(
+//                    header = "Sms is not coming",
+//                    onDismissRequest = { isVisible = false },
+//
+//                )
+//            }
 
         }
     }

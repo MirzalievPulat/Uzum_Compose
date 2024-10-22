@@ -1,5 +1,6 @@
 package uz.gita.uzumcompose.screens.auth.signUp
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +52,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 import uz.gita.common.other.GenderType
+import uz.gita.presentation.auth.signIn.SignInContract
 import uz.gita.presentation.auth.signUp.SignUpContract
 import uz.gita.presentation.auth.signUp.SignUpVM
 import uz.gita.uzumcompose.R
@@ -60,6 +62,7 @@ import uz.gita.uzumcompose.ui.components.AppRadioButton
 import uz.gita.uzumcompose.ui.components.AppTextButton
 import uz.gita.uzumcompose.ui.components.AppTextField
 import uz.gita.uzumcompose.ui.components.DatePickerModal
+import uz.gita.uzumcompose.ui.components.NetworkErrorDialog
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
@@ -115,7 +118,6 @@ fun SignUpScreenContent(
     var birthDate by remember { mutableStateOf("0") }
     var isMale by remember { mutableStateOf(true) }
 
-//    val focusRequester by remember { mutableStateOf(FocusRequester()) }
     var isSheetVisible by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     val imeState = rememberImeState()
@@ -126,9 +128,9 @@ fun SignUpScreenContent(
         }
     }
 
-//    LaunchedEffect(key1 = Unit) {
-//        focusRequester.requestFocus()
-//    }
+    if (uiState.value.networkDialog){
+        NetworkErrorDialog (onDismissRequest = {onEventDispatcher(SignUpContract.Intent.DialogDismiss)})
+    }
 
 
     Scaffold(
@@ -136,7 +138,7 @@ fun SignUpScreenContent(
             .fillMaxSize()
             .background(Color.White),
         topBar = {
-            Column {
+            Column(modifier = Modifier.background(Color.White)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -158,6 +160,7 @@ fun SignUpScreenContent(
             AppBottomSheet(
                 header = stringResource(R.string.btn_support),
                 context = LocalContext.current,
+                networkStatusValidator = uiState.value.networkStatusValidator!!,
                 onDismissRequest = { isSheetVisible = false },
             )
         }
@@ -165,6 +168,7 @@ fun SignUpScreenContent(
 
         Column(
             modifier = Modifier
+                .background(Color.White)
                 .fillMaxSize()
                 .padding(contentPadding)
                 .verticalScroll(scrollState)
@@ -277,7 +281,6 @@ fun SignUpScreenContent(
             Spacer(modifier = Modifier.height(18.dp))
 
 
-
             DatePickerModal(
                 onDateSelected = { birthDate = it.toString() },
                 errorText = uiState.value.birthDateError
@@ -329,6 +332,7 @@ fun SignUpScreenContent(
                 text = stringResource(R.string.btn_sign_in),
                 modifier = Modifier.fillMaxWidth()
             ) {
+                Log.d("TAG", "SignUpScreenContent: kirdi")
                 onEventDispatcher.invoke(SignUpContract.Intent.SelectSignIn)
             }
         }

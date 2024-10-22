@@ -1,5 +1,6 @@
 package uz.gita.presentation.auth.signIn
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +30,8 @@ class SignInVM @Inject constructor(
     private val networkStatusValidator: NetworkStatusValidator
 ) : ViewModel(), SignInContract.ViewModel {
 
-    override val container = container<SignInContract.UIState, SignInContract.SideEffect>(SignInContract.UIState())
+    override val container = container<SignInContract.UIState, SignInContract.SideEffect>(SignInContract.UIState().copy
+        (networkStatusValidator = networkStatusValidator))
 
 
     override fun onEventDispatcher(intent: SignInContract.Intent) = intent {
@@ -38,23 +40,31 @@ class SignInVM @Inject constructor(
                 directions.moveToSignUp()
             }
 
+            SignInContract.Intent.DismissDialog -> {
+                reduce { state.copy(networkDialog = false) }
+            }
+
             is SignInContract.Intent.ClickContinue -> {
+                Log.d("TAG", "onEventDispatcher: SignInContract.Intent.ClickContinue")
                 if (!areInputsValid(intent)) return@intent
+                Log.d("TAG", "onEventDispatcher: SignInContract.Intent.ClickContinue")
 
                 if (networkStatusValidator.isNetworkEnabled){
+                    Log.d("TAG", "onEventDispatcher: SignInContract.Intent.ClickContinue")
                     signInUC.invoke(
                         AuthData.SignIn(
-                            phone = intent.phone,
+                            phone = "+998"+intent.phone,
                             password = intent.password,
                         )
                     ).onStart { reduce { state.copy(isLoading = true) } }
-                        .onSuccess { directions.moveToVerify(intent.phone) }
+                        .onSuccess { directions.moveToVerify("+998"+intent.phone) }
                         .onFailure { postSideEffect(SignInContract.SideEffect.Message(it.message?:"Error happened"))}
                         .onCompletion {
                             reduce { state.copy(isLoading = false) }
                         }
                         .launchIn(viewModelScope)
                 }else{
+                    Log.d("TAG", "onEventDispatcher: elese part")
                     reduce { state.copy(networkDialog = true) }
                 }
 

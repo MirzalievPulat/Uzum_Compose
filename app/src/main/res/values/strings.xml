@@ -45,4 +45,10 @@
     <string name="txt_customer_support">Customer Support</string>
     <string name="txt_online">Online</string>
     <string name="txt_customer_support_info">Hello! This is the support service of Uzum Bank. Write us any question and we\'ll be happy to help you.</string>
+    <string name="network_error">Network error</string>
+    <string name="close">Close</string>
+    <string name="hello">Hello</string>
+    <string name="tick_text">You can add cards with SMS informing number as in your Uzum bank account</string>
+    <string name="card_text">Uzcard and Humo of any banks, Visa and Mastercard from the Kapitalbank</string>
+    <string name="card_is_successfully_added">Card is successfully added!</string>
 </resources>

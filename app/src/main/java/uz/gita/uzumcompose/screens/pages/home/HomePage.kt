@@ -81,15 +81,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import cafe.adriel.voyager.hilt.getViewModel
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.orbitmvi.orbit.compose.collectAsState
-import uz.gita.presentation.home.HomePageContract
-import uz.gita.presentation.home.HomePageVM
+import uz.gita.presentation.home.home.HomePageContract
+import uz.gita.presentation.home.home.HomePageVM
 import uz.gita.uzumcompose.R
+import uz.gita.uzumcompose.screens.main.PolatTab
+import uz.gita.uzumcompose.screens.main.PolatTabOptions
 import uz.gita.uzumcompose.ui.components.TransparentTextField
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.BlackUzum2
@@ -109,18 +109,20 @@ import uz.gita.uzumcompose.utils.extensions.formatToMoney
 
 //adamari
 
-class HomePage : Tab {
-    override val options: TabOptions
+object HomePage : PolatTab {
+    override val polatTabOptions: PolatTabOptions
         @Composable
         get() {
             val title = stringResource(R.string.bottom_nav_home)
-            val icon = rememberVectorPainter(image = ImageVector.vectorResource(id = R.drawable.ic_home_active_24))
+            val selectedIcon = rememberVectorPainter(image = ImageVector.vectorResource(id = R.drawable.ic_home_active_24))
+            val unSelectedIcon = rememberVectorPainter(image = ImageVector.vectorResource(id = R.drawable.ic_home_24))
 
             return remember {
-                TabOptions(
+                PolatTabOptions(
                     index = 0u,
                     title = title,
-                    icon = icon
+                    selectedIcon = selectedIcon,
+                    unSelectedIcon = unSelectedIcon
                 )
             }
         }
@@ -278,7 +280,8 @@ private fun HomeContent(
                 refreshing = uiState.value.isLoading,
                 state = pullRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter),
-                backgroundColor = if (uiState.value.isLoading) Color.Red else Color.Green,
+                backgroundColor = Color.White,
+                contentColor = Color.PinkUzum
             )
         }
 

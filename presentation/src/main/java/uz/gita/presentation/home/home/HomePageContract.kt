@@ -1,4 +1,4 @@
-package uz.gita.presentation.home
+package uz.gita.presentation.home.home
 
 import org.orbitmvi.orbit.ContainerHost
 import uz.gita.common.data.CardData
@@ -24,7 +24,7 @@ interface HomePageContract {
     }
 
     interface Intent {
-        object AddCardClick:Intent
-        object UpdateClick:Intent
+        object AddCardClick: Intent
+        object UpdateClick: Intent
     }
 }

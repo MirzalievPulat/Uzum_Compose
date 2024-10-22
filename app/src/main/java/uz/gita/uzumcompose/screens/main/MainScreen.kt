@@ -1,13 +1,16 @@
 package uz.gita.uzumcompose.screens.main
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,6 +23,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +35,7 @@ import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
+import cafe.adriel.voyager.navigator.tab.TabOptions
 import uz.gita.uzumcompose.screens.pages.home.HomePage
 import uz.gita.uzumcompose.screens.pages.menu.MenuPage
 import uz.gita.uzumcompose.screens.pages.message.MessagePage
@@ -58,22 +65,28 @@ fun MainScreenPreview() {
 @Composable
 fun MainScreenContent() {
 
-    TabNavigator(tab = HomePage()) {
+    TabNavigator(tab = HomePage) {
         Scaffold(
             content = {
-                CurrentTab()
+                val window = (LocalView.current.context as Activity).window
+                window.statusBarColor = Color.Black.toArgb()
+                Box(modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize()) {
+                    CurrentTab()
+                }
             },
             bottomBar = {
-                NavigationBar(modifier = Modifier
-                    .defaultMinSize(minHeight = 56.dp)
-                    .background(color = Color.White)
-                    , containerColor = Color.White
+                NavigationBar(
+                    modifier = Modifier
+                        .defaultMinSize(minHeight = 56.dp)
+                        .background(color = Color.White), containerColor = Color.White
                 ) {
-                    TabNavigationItem(HomePage())
-                    TabNavigationItem(TransferPage())
-                    TabNavigationItem(PaymentPage())
-                    TabNavigationItem(MessagePage())
-                    TabNavigationItem(MenuPage())
+                    TabNavigationItem(HomePage)
+                    TabNavigationItem(TransferPage)
+                    TabNavigationItem(PaymentPage)
+                    TabNavigationItem(MessagePage)
+                    TabNavigationItem(MenuPage)
                 }
             }
         )
@@ -81,10 +94,8 @@ fun MainScreenContent() {
 }
 
 @Composable
-fun RowScope.TabNavigationItem(tab: Tab) {
+fun RowScope.TabNavigationItem(tab: PolatTab) {
     val tabNavigator = LocalTabNavigator.current
-
-    val interactionSource = remember { MutableInteractionSource() }
 
 
     Column(
@@ -102,7 +113,8 @@ fun RowScope.TabNavigationItem(tab: Tab) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            painter = tab.options.icon!!,
+            painter = if (tabNavigator.current == tab) tab.polatTabOptions.selectedIcon!!
+            else tab.polatTabOptions.unSelectedIcon!!,
             contentDescription = tab.options.title,
             modifier = Modifier.size(24.dp)
         )
@@ -116,26 +128,23 @@ fun RowScope.TabNavigationItem(tab: Tab) {
     }
 
 
-//    NavigationBarItem(
-//        selected = tabNavigator.current == tab,
-//        onClick = { tabNavigator.current = tab },
-//        label = {
-//            Text(
-//                text = tab.options.title,
-//                fontSize = 10.sp,
-//                fontFamily = fontFamilyUzum,
-//                fontWeight = FontWeight.SemiBold
-//            )
-//        },
-//        icon = {
-//            Icon(
-//                painter = tab.options.icon!!,
-//                contentDescription = tab.options.title
-//            )
-//        },
-//        colors = NavigationBarItemDefaults.colors(
-//            indicatorColor = Color.Transparent,
-//        ),
-//        modifier = Modifier.padding(vertical = 0.dp)
-//    )
 }
+
+
+public interface PolatTab : Tab {
+    val polatTabOptions: PolatTabOptions
+        @Composable get
+    override val options: TabOptions
+        @Composable get() = TabOptions(
+            0u,
+            "",
+            null
+        )
+}
+
+public data class PolatTabOptions(
+    val index: UShort,
+    val title: String,
+    val selectedIcon: Painter? = null,
+    val unSelectedIcon: Painter? = null,
+)

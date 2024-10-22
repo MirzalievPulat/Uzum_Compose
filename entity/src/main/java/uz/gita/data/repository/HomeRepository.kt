@@ -15,4 +15,6 @@ interface HomeRepository {
     fun updateInfo( updateInfo: HomeData.UpdateInfo): Flow<Result<HomeData.UpdateInfoResponse>>
 
     fun lastTransfers(): Flow<Result<List<HomeData.TransferInfo>>>
+
+
 }

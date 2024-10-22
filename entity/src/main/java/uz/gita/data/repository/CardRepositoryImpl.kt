@@ -1,5 +1,6 @@
 package uz.gita.data.repository
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
@@ -39,13 +40,14 @@ class CardRepositoryImpl @Inject constructor(
     }.catch { emit(Result.failure(Exception(it))) }.flowOn(Dispatchers.IO)
 
     override fun addCard(newCardParams: CardData.NewCardParams): Flow<Result<CardData.CardMessage>> = flow{
-
+        Log.d("TAG", "addCard: ishladi")
         val result = cardApi.addCard(newCardParams.toRequest()).toResult {
+            Log.d("TAG", "addCard:success ${it.message}")
             it.toResponse()
         }
         emit(result)
 
-    }.catch { emit(Result.failure(Exception(it))) }.flowOn(Dispatchers.IO)
+    }.catch { Log.d("TAG", "addCard: catch ishladi e");emit(Result.failure(Exception(it.message))) }.flowOn(Dispatchers.IO)
 
     override fun updateCard(updateCardParams: CardData.UpdateCardParams): Flow<Result<CardData.CardMessage>> = flow{
 

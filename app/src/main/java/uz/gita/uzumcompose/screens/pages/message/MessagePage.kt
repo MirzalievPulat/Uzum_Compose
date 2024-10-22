@@ -1,5 +1,6 @@
 package uz.gita.uzumcompose.screens.pages.message
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,8 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -38,29 +41,32 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import uz.gita.uzumcompose.R
+import uz.gita.uzumcompose.screens.main.PolatTab
+import uz.gita.uzumcompose.screens.main.PolatTabOptions
 import uz.gita.uzumcompose.ui.components.AppTextField
 import uz.gita.uzumcompose.ui.theme.HintUzum
 import uz.gita.uzumcompose.ui.theme.TextField
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 
-class MessagePage:Tab {
-    override val options: TabOptions
+object MessagePage:PolatTab {
+    override val polatTabOptions: PolatTabOptions
         @Composable
         get(){
             val title = stringResource(R.string.bottom_nav_messages)
-            val icon = rememberVectorPainter(image = ImageVector.vectorResource(R.drawable.ic_message))
+            val selectedIcon = rememberVectorPainter(image = ImageVector.vectorResource(R.drawable.ic_message_active))
+            val unSelectedIcon = rememberVectorPainter(image = ImageVector.vectorResource(R.drawable.ic_message))
 
-            return TabOptions(
+            return PolatTabOptions(
                 index = 3u,
                 title = title,
-                icon = icon
+                selectedIcon, unSelectedIcon
             )
         }
 
     @Composable
     override fun Content() {
-        Text(text = "Messages page")
+        MessagePageContent()
     }
 }
 
@@ -75,6 +81,7 @@ fun MessagePagePrev() {
 
 @Composable
 fun MessagePageContent() {
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -99,7 +106,7 @@ fun MessagePageContent() {
         }
     ) {contentPadding->
 
-        var message by remember { mutableStateOf("a") }
+        var message by remember { mutableStateOf("") }
 
         Column(modifier = Modifier
             .padding(contentPadding)
@@ -136,7 +143,8 @@ fun MessagePageContent() {
                         if (message.isNotBlank()){
                             Image(painter = painterResource(id = R.drawable.ic_send_24_fill),
                                 contentDescription = "Send",
-                                modifier = Modifier.padding(horizontal = 8.dp)
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
                                     .clip(CircleShape)
                                     .clickable {
 

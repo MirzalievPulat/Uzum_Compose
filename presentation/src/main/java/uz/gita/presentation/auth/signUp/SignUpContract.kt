@@ -3,6 +3,7 @@ package uz.gita.presentation.auth.signUp
 import org.orbitmvi.orbit.ContainerHost
 import uz.gita.common.data.CardData
 import uz.gita.common.other.GenderType
+import uz.gita.presentation.helper.NetworkStatusValidator
 
 interface SignUpContract {
 
@@ -19,16 +20,9 @@ interface SignUpContract {
         val phoneNumberError: String? = null,
         val passwordError: String? = null,
         val birthDateError: String? = null,
+
+        val networkStatusValidator: NetworkStatusValidator? = null
     )
-//    sealed interface UIState {
-//        object Loading : UIState
-//        object NoInternet : UIState
-//        data class DataState(
-//            val isEnable: Boolean = false,
-//            var isMale: Boolean = false,
-//            val isFeMale: Boolean = false
-//        ) : UIState
-//    }
 
     sealed interface SideEffect {
         data class Message(val message: String) : SideEffect
@@ -50,5 +44,6 @@ interface SignUpContract {
         ) : Intent
 
         object SelectSignIn : Intent
+        object DialogDismiss:Intent
     }
 }

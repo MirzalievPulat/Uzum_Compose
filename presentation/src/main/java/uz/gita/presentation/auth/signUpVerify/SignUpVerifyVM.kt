@@ -14,6 +14,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import uz.gita.common.data.AuthData
 import uz.gita.domain.authUseCase.SignUpResendUC
 import uz.gita.domain.authUseCase.SignUpVerifyUC
+import uz.gita.presentation.auth.signInVerify.SignInVerifyContract
 import uz.gita.presentation.auth.signUp.SignUpContract
 import uz.gita.presentation.helper.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.onFailure
@@ -31,7 +32,8 @@ class SignUpVerifyVM @Inject constructor(
 ) : ViewModel(), SignUpVerifyContract.ViewModel {
 
     override val container =
-        container<SignUpVerifyContract.UIState, SignUpVerifyContract.SideEffect>(SignUpVerifyContract.UIState())
+        container<SignUpVerifyContract.UIState, SignUpVerifyContract.SideEffect>(SignUpVerifyContract.UIState().copy
+            (networkStatusValidator = networkStatusValidator))
 
     override fun onEventDispatcher(intent: SignUpVerifyContract.Intent) = intent {
         when (intent) {
@@ -47,6 +49,10 @@ class SignUpVerifyVM @Inject constructor(
                     reduce { state.copy(networkError = true) }
                 }
 
+            }
+
+            SignUpVerifyContract.Intent.DismissDialog -> {
+                reduce { state.copy(networkError = false) }
             }
 
             SignUpVerifyContract.Intent.SelectBack -> {

@@ -1,4 +1,4 @@
-package uz.gita.presentation.home
+package uz.gita.presentation.home.home
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

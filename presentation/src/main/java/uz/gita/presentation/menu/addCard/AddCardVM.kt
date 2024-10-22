@@ -8,12 +8,19 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import uz.gita.common.data.CardData
 import uz.gita.domain.cardUseCase.AddCardUC
 import uz.gita.domain.cardUseCase.GetCardsUC
 import uz.gita.domain.homeUseCase.GetTotalBalanceUC
+import uz.gita.domain.validatorUseCase.CardPanValidatorUC
+import uz.gita.domain.validatorUseCase.FirstNameValidatorUC
+import uz.gita.domain.validatorUseCase.LastNameValidatorUC
+import uz.gita.domain.validatorUseCase.YearValidatorUC
+import uz.gita.presentation.auth.signIn.SignInContract
+import uz.gita.presentation.helper.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.onFailure
 import uz.gita.presentation.helper.extensions.onSuccess
 import javax.inject.Inject
@@ -22,6 +29,10 @@ import javax.inject.Inject
 class AddCardVM @Inject constructor(
     private val addCardUC: AddCardUC,
     private val directions: AddCardContract.Direction,
+    private val cardPanValidatorUC: CardPanValidatorUC,
+    private val yearValidatorUC: YearValidatorUC,
+    private val firstNameValidatorUC: FirstNameValidatorUC,
+    private val networkStatusValidator: NetworkStatusValidator
 ) : ViewModel(), AddCardContract.ViewModel {
 
     override val container = container<AddCardContract.UIState, AddCardContract.SideEffect>(AddCardContract.UIState())
@@ -29,19 +40,55 @@ class AddCardVM @Inject constructor(
     override fun onEventDispatcher(intent: AddCardContract.Intent) = intent {
         when (intent) {
             is AddCardContract.Intent.NextClick -> {
-                addCardUC.invoke(
-                    CardData.NewCardParams(
-                        pan = intent.pan,
-                        expiredMonth = intent.expiredMonty,
-                        expiredYear = intent.expiredYear,
-                        name = intent.name
+
+                if (networkStatusValidator.isNetworkEnabled){
+                    if(!areInputsValid(intent)) return@intent
+
+                    addCardUC.invoke(
+                        CardData.NewCardParams(
+                            pan = intent.pan,
+                            expiredMonth = intent.expiredMontyYear.substring(0,2),
+                            expiredYear = "20"+intent.expiredMontyYear.substring(2),
+                            name = intent.name
+                        )
                     )
-                )
-                    .onSuccess { directions.goBack() }
-                    .onFailure { Log.d("TAG", "onEventDispatcher: ${it.message}") }
-                    .launchIn(viewModelScope)
+                        .onStart { reduce { state.copy(isLoading = true) } }
+                        .onSuccess { reduce { state.copy(dialogOpen = true) } }
+                        .onFailure {
+                            postSideEffect(AddCardContract.SideEffect.ToastMessage(it.message?:"Unknown error"))
+                        }
+                        .onCompletion { reduce { state.copy(isLoading = false) } }
+                        .launchIn(viewModelScope)
+                }else{
+                    reduce { state.copy(networkDialog = true) }
+                }
+
+            }
+            AddCardContract.Intent.Back->{
+                directions.goBack()
+            }
+            AddCardContract.Intent.DialogOKClick->{
+                reduce { state.copy(dialogOpen = false) }
+                directions.goHome()
             }
         }
     }
 
+    private fun areInputsValid(intent: AddCardContract.Intent.NextClick): Boolean {
+        val pan = cardPanValidatorUC(intent.pan)
+        val monthYear = yearValidatorUC(intent.expiredMontyYear)
+        val name = firstNameValidatorUC(intent.name)
+
+        intent {
+            reduce {
+                state.copy(
+                    errorPan = pan,
+                    errorMonthYear = monthYear,
+                    errorName = name?.replace("First name","Name")
+                )
+            }
+        }
+
+        return pan == null  && monthYear == null && name == null
+    }
 }

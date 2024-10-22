@@ -9,18 +9,21 @@ import androidx.compose.ui.res.vectorResource
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import uz.gita.uzumcompose.R
+import uz.gita.uzumcompose.screens.main.PolatTab
+import uz.gita.uzumcompose.screens.main.PolatTabOptions
 
-class PaymentPage:Tab {
-    override val options: TabOptions
+object PaymentPage:PolatTab {
+    override val polatTabOptions: PolatTabOptions
         @Composable
         get() {
             val title = stringResource(R.string.bottom_nav_payment)
-            val icon = rememberVectorPainter(image = ImageVector.vectorResource(id = R.drawable.ic_payment))
+            val selectedIcon = rememberVectorPainter(image = ImageVector.vectorResource(id = R.drawable.ic_payment_active))
+            val unSelectedIcon = rememberVectorPainter(image = ImageVector.vectorResource(id = R.drawable.ic_payment))
 
-            return TabOptions(
+            return PolatTabOptions(
                 index = 2u,
                 title = title,
-                icon = icon
+                selectedIcon, unSelectedIcon
             )
         }
 

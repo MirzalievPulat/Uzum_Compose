@@ -1,4 +1,4 @@
-package uz.gita.uzumcompose.utils.helper
+package uz.gita.uzumcompose.ui.components
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode

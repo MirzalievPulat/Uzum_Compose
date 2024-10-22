@@ -1,6 +1,7 @@
 package uz.gita.presentation.auth.signIn
 
 import org.orbitmvi.orbit.ContainerHost
+import uz.gita.presentation.helper.NetworkStatusValidator
 import java.lang.Error
 
 interface SignInContract {
@@ -15,6 +16,8 @@ interface SignInContract {
 
         val phoneNumberError: String? = null,
         val passwordError: String? = null,
+
+        val networkStatusValidator: NetworkStatusValidator? = null
     )
 
 
@@ -34,5 +37,6 @@ interface SignInContract {
         ) : Intent
 
         object SelectSignUp: Intent
+        object DismissDialog: Intent
     }
 }

@@ -5,18 +5,18 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class NetworkStatusValidator @Inject constructor(@ApplicationContext val context: Context) {
-//    companion object{
-        var isNetworkEnabled: Boolean = false
+    var isNetworkEnabled: Boolean = false
         private set
-//    }
 
     fun listenNetworkStatus(onAvailable: () -> Unit, onLost: () -> Unit) {
+        Log.d("TAG", "listenNetworkStatus: ishlayapti")
         val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)

@@ -1,7 +1,7 @@
 package uz.gita.presentation.auth.enterPin
 
-import android.graphics.Color
 import org.orbitmvi.orbit.ContainerHost
+import uz.gita.presentation.auth.setPin.SetPinContract.Intent
 
 interface EnterPinContract {
 
@@ -11,11 +11,13 @@ interface EnterPinContract {
 
     data class UIState(
         val errorAnim:Long = 0,
-        val fourDigitCorrect:Boolean = true
+        val fourDigitCorrect:Boolean = true,
+        val name:String = "Po'lat",
+        val currentCode:String = ""
     )
 
     sealed interface SideEffect {
-        data class Message(val message: String) : SideEffect
+        data class ResultMessage(val message: String) : SideEffect
     }
 
     interface Direction {
@@ -23,10 +25,10 @@ interface EnterPinContract {
     }
 
     interface Intent {
-        object SelectBack:Intent
         data class GoToMain(
-            val code1:String,
-            val code2:String
+            val code:String
         ):Intent
+        data class ClickDigit(val digit:String): Intent
+        object ClickDelete: Intent
     }
 }

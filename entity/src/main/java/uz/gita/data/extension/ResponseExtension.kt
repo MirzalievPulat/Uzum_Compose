@@ -1,26 +1,32 @@
 package uz.gita.data.extension
 
+import android.util.Log
 import com.google.gson.Gson
 import retrofit2.Response
 import uz.gita.data.model.response.AuthResponse
-import uz.gita.data.model.response.ErrorResponse
+import uz.gita.data.model.response.ErrorMessage
 
 private val gson = Gson()
 
 suspend fun <T, R> Response<T>.toResult(successBlock: suspend (T) -> R): Result<R> {
     return when {
-        isSuccessful -> {
+        isSuccessful && body() != null -> {
             Result.success(successBlock(body()!!))
         }
 
         errorBody() != null -> {
-            val errorResponse = gson.fromJson(errorBody()!!.string(), ErrorResponse::class.java)
-            Result.failure(Exception(errorResponse.message))
+            Log.d("TAG", "toResult: ${errorBody()?.string() == null}")
+
+            val errorResponse = gson.fromJson(errorBody()!!.string(), ErrorMessage::class.java)//here
+            Log.d("TAG", "toResult: errorResult:$errorResponse")
+            Result.failure(Exception(errorResponse.message?:"Daxshat xato yuz berdi, qoching, uyizga melisa boradi xoz"))
         }
+
 
         else -> Result.failure(Exception("Unknown exception"))
     }
 }
+
 
 //bobur yozgani
 //private fun <T> handleResult(result: Response<T>, onSuccess: (T) -> Unit): Result<Unit> {

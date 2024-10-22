@@ -11,7 +11,8 @@ import uz.gita.data.extension.toResult
 import uz.gita.data.locale.LocalStorage
 import uz.gita.data.model.mapper.toRequest
 import uz.gita.data.model.mapper.toResponse
-import uz.gita.data.model.response.ErrorResponse
+import uz.gita.data.model.response.AuthResponse
+import uz.gita.data.model.response.ErrorMessage
 import uz.gita.data.remote.api.HomeApi
 import javax.inject.Inject
 
@@ -31,7 +32,7 @@ class HomeRepositoryImpl @Inject constructor(
             emit(Result.success(response.body()!!.toResponse()))
             storage.lastTotalBalance = response.body()!!.totalBalance
         } else if (response.errorBody() != null) {
-            val errorMessage = gson.fromJson(response.errorBody()!!.string(), ErrorResponse::class.java)
+            val errorMessage = gson.fromJson(response.errorBody()!!.string(), ErrorMessage::class.java)
             emit(Result.failure(Exception(errorMessage.message)))
         } else {
             emit(Result.failure(Exception("Unknown error")))

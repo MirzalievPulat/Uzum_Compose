@@ -1,6 +1,7 @@
 package uz.gita.uzumcompose.screens.auth.splash
 
 import uz.gita.presentation.auth.splash.SplashContract
+import uz.gita.uzumcompose.screens.auth.enterPin.EnterPinScreen
 import uz.gita.uzumcompose.screens.auth.signIn.SignInScreen
 import uz.gita.uzumcompose.screens.auth.signUp.SignUpScreen
 
@@ -17,6 +18,6 @@ class SplashDirections @Inject constructor(private val appNavigator: AppNavigato
     }
 
     override suspend fun moveToPin() {
-//        appNavigator.replace(PinScreen())
+        appNavigator.replace(EnterPinScreen())
     }
 }

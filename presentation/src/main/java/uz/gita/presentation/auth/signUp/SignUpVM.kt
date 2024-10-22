@@ -1,6 +1,5 @@
 package uz.gita.presentation.auth.signUp
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +34,10 @@ class SignUpVM @Inject constructor(
     private val networkStatusValidator: NetworkStatusValidator
 ) : ViewModel(), SignUpContract.ViewModel {
 
-    override val container = container<SignUpContract.UIState, SignUpContract.SideEffect>(SignUpContract.UIState())
+    override val container = container<SignUpContract.UIState, SignUpContract.SideEffect>(
+        SignUpContract.UIState().copy
+            (networkStatusValidator = networkStatusValidator)
+    )
 
 
     override fun onEventDispatcher(intent: SignUpContract.Intent) = intent {
@@ -44,27 +46,31 @@ class SignUpVM @Inject constructor(
                 directions.moveToSignIn()
             }
 
+            SignUpContract.Intent.DialogDismiss -> {
+                reduce { state.copy(networkDialog = false) }
+            }
+
             is SignUpContract.Intent.ClickContinue -> {
                 if (!areInputsValid(intent)) return@intent
 
-                if (networkStatusValidator.isNetworkEnabled){
-                signUpUC.invoke(
-                    AuthData.SignUp(
-                        "+998" +intent.phone,
-                        intent.password,
-                        intent.firstName,
-                        intent.lastName,
-                        intent.birthDate,
-                        intent.genderType.ordinal.toString()
-                    )
-                ).onStart { reduce { state.copy(isLoading = true) } }
-                    .onSuccess { directions.moveToVerify(intent.phone) }
-                    .onFailure {  postSideEffect(SignUpContract.SideEffect.Message(it.message?:"Error happened")) }
-                    .onCompletion {
-                        reduce { state.copy(isLoading = false) }
-                    }
-                    .launchIn(viewModelScope)
-                }else{
+                if (networkStatusValidator.isNetworkEnabled) {
+                    signUpUC.invoke(
+                        AuthData.SignUp(
+                            "+998" + intent.phone,
+                            intent.password,
+                            intent.firstName,
+                            intent.lastName,
+                            intent.birthDate,
+                            intent.genderType.ordinal.toString()
+                        )
+                    ).onStart { reduce { state.copy(isLoading = true) } }
+                        .onSuccess { directions.moveToVerify("+998" + intent.phone) }
+                        .onFailure { postSideEffect(SignUpContract.SideEffect.Message(it.message ?: "Error happened")) }
+                        .onCompletion {
+                            reduce { state.copy(isLoading = false) }
+                        }
+                        .launchIn(viewModelScope)
+                } else {
                     reduce { state.copy(networkDialog = true) }
                 }
 

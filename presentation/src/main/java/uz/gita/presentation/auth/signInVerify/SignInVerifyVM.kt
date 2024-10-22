@@ -1,5 +1,6 @@
 package uz.gita.presentation.auth.signInVerify
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,6 @@ import org.orbitmvi.orbit.viewmodel.container
 import uz.gita.common.data.AuthData
 import uz.gita.domain.authUseCase.SignInResendUC
 import uz.gita.domain.authUseCase.SignInVerifyUC
-import uz.gita.presentation.auth.signUpVerify.SignUpVerifyContract
 import uz.gita.presentation.helper.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.onFailure
 import uz.gita.presentation.helper.extensions.onSuccess
@@ -29,31 +29,36 @@ class SignInVerifyVM @Inject constructor(
 ) : ViewModel(), SignInVerifyContract.ViewModel {
 
     override val container = container<SignInVerifyContract.UIState, SignInVerifyContract.SideEffect>(
-        SignInVerifyContract.UIState()
+        SignInVerifyContract.UIState().copy(networkStatusValidator = networkStatusValidator)
     )
 
     override fun onEventDispatcher(intent: SignInVerifyContract.Intent) = intent {
         when (intent) {
             SignInVerifyContract.Intent.SelectResend -> {
-                if (networkStatusValidator.isNetworkEnabled){
+                if (networkStatusValidator.isNetworkEnabled) {
                     resendUC.invoke()
                         .onStart { reduce { state.copy(showProgress = true) } }
-                        .onSuccess { reduce { state.copy(resendCode = Random.nextFloat()) };println("success") }
-                        .onFailure { postSideEffect(SignInVerifyContract.SideEffect.Message(it.message?:"Error happened"))}
+                        .onSuccess {
+                            reduce { state.copy(resendCode = Random.nextFloat(), codeError = null) }
+                        }
+                        .onFailure { postSideEffect(SignInVerifyContract.SideEffect.Message(it.message ?: "Error happened")) }
                         .onCompletion { reduce { state.copy(showProgress = false) } }
                         .launchIn(viewModelScope)
-                }else{
+                } else {
                     reduce { state.copy(networkError = true) }
                 }
-
             }
 
             SignInVerifyContract.Intent.SelectBack -> {
                 directions.moveBack()
             }
 
+            SignInVerifyContract.Intent.DismissDialog -> {
+                reduce { state.copy(networkError = false) }
+            }
+
             is SignInVerifyContract.Intent.GoToPin -> {
-                if (networkStatusValidator.isNetworkEnabled){
+                if (networkStatusValidator.isNetworkEnabled) {
                     signInVerifyUC.invoke(
                         AuthData.Verify(
                             intent.code
@@ -63,11 +68,16 @@ class SignInVerifyVM @Inject constructor(
                             directions.moveToPinScreen()
                         }
                         .onFailure {
-                            postSideEffect(SignInVerifyContract.SideEffect.Message(it.message?:"Error happened"))
+                            Log.d("TAG", "onEventDispatcher signin verify error: ${it.message}")
+                            if (it.message == "Code noto'g'ri")
+                                reduce { state.copy(codeError = "Wrong code") }
+                            else
+                                reduce { state.copy(codeError = "Code entry timed out") }
+
                         }
                         .onCompletion { }
                         .launchIn(viewModelScope)
-                }else{
+                } else {
                     reduce { state.copy(networkError = true) }
                 }
 

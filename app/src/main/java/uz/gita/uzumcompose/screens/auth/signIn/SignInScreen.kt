@@ -52,6 +52,7 @@ import uz.gita.uzumcompose.ui.components.AppBottomSheet
 import uz.gita.uzumcompose.ui.components.AppButton
 import uz.gita.uzumcompose.ui.components.AppTextButton
 import uz.gita.uzumcompose.ui.components.AppTextField
+import uz.gita.uzumcompose.ui.components.NetworkErrorDialog
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
@@ -110,6 +111,10 @@ fun SignInScreenContent(
         focusRequester.requestFocus()
     }
 
+    if (uiState.value.networkDialog){
+        NetworkErrorDialog (onDismissRequest = {onEventDispatcher(SignInContract.Intent.DismissDialog)})
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
@@ -137,6 +142,7 @@ fun SignInScreenContent(
                 AppBottomSheet(
                     header = stringResource(R.string.btn_support),
                     context = LocalContext.current,
+                    networkStatusValidator = uiState.value.networkStatusValidator!!,
                     onDismissRequest = { isSheetVisible = false },
                 )
             }

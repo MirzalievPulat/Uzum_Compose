@@ -17,4 +17,5 @@ sealed class AuthResponse {
     )
 
     data class Resend(val token: String)
+//    data class Error(val message: String)
 }

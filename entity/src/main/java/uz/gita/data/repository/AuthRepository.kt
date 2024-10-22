@@ -17,4 +17,6 @@ interface AuthRepository {
     fun getNextScreen(): Flow<Result<AfterSplash>>
     fun logOut(): Flow<Result<Unit>>
     fun setPin(pin: String): Flow<Result<Unit>>
+    fun getPin(): Flow<Result<String>>
+    fun getName(): Flow<Result<String>>
 }

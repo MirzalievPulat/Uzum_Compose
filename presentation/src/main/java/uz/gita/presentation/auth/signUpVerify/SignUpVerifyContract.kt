@@ -1,6 +1,7 @@
 package uz.gita.presentation.auth.signUpVerify
 
 import org.orbitmvi.orbit.ContainerHost
+import uz.gita.presentation.helper.NetworkStatusValidator
 import kotlin.random.Random
 
 interface SignUpVerifyContract {
@@ -14,7 +15,9 @@ interface SignUpVerifyContract {
         val networkError:Boolean = false,
         val resendCode:Float = Random.nextFloat(),
         val showProgress:Boolean = false,
-        val codeError:String? = null
+        val codeError:String? = null,
+
+        val networkStatusValidator: NetworkStatusValidator? = null
     )
 
     sealed interface SideEffect {
@@ -31,6 +34,7 @@ interface SignUpVerifyContract {
         data class GoToPin(
             val code:String
         ): Intent
+        object DismissDialog:Intent
         object SelectBack: Intent
     }
 }

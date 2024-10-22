@@ -5,7 +5,9 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import uz.gita.domain.authUseCase.GetNameUC
 import uz.gita.domain.authUseCase.GetNextScreenUC
+import uz.gita.domain.authUseCase.GetPinUC
 import uz.gita.domain.authUseCase.SetPinUC
 import uz.gita.domain.authUseCase.SignInResendUC
 import uz.gita.domain.authUseCase.SignInUC
@@ -14,7 +16,9 @@ import uz.gita.domain.authUseCase.SignUpResendUC
 import uz.gita.domain.authUseCase.SignUpUC
 import uz.gita.domain.authUseCase.SignUpVerifyUC
 import uz.gita.domain.authUseCase.UpdateTokenUC
+import uz.gita.domain.authUseCase.impl.GetNameUCImpl
 import uz.gita.domain.authUseCase.impl.GetNextScreenUCImpl
+import uz.gita.domain.authUseCase.impl.GetPinUCImpl
 import uz.gita.domain.authUseCase.impl.SetPinUCImpl
 import uz.gita.domain.authUseCase.impl.SignInResendUCImpl
 import uz.gita.domain.authUseCase.impl.SignInUCImpl
@@ -55,4 +59,10 @@ interface AuthUCModule {
 
     @[Binds ViewModelScoped]
     fun provideSetPinUC(impl: SetPinUCImpl): SetPinUC
+
+    @[Binds ViewModelScoped]
+    fun provideGetPinUC(impl: GetPinUCImpl): GetPinUC
+
+    @[Binds ViewModelScoped]
+    fun provideGetNameUC(impl: GetNameUCImpl): GetNameUC
 }

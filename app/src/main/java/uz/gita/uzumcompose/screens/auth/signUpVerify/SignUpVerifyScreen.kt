@@ -1,6 +1,7 @@
 package uz.gita.uzumcompose.screens.auth.signUpVerify
 
 import android.os.CountDownTimer
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,11 +46,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.orbitmvi.orbit.compose.collectAsState
+import uz.gita.presentation.auth.signInVerify.SignInVerifyContract
 import uz.gita.presentation.auth.signUpVerify.SignUpVerifyContract
 import uz.gita.presentation.auth.signUpVerify.SignUpVerifyVM
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.ui.components.AppBottomSheet
 import uz.gita.uzumcompose.ui.components.AppTextButton
+import uz.gita.uzumcompose.ui.components.NetworkErrorDialog
 import uz.gita.uzumcompose.ui.components.PinViewComponent
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.HintUzum
@@ -117,12 +120,16 @@ fun SignUpVerifyContent(
         }.start()
     }
 
+    if (uiState.value.networkError) {
+        NetworkErrorDialog(onDismissRequest = { onEventDispatcher(SignUpVerifyContract.Intent.DismissDialog) })
+    }
+
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         topBar = {
             Row(
-                modifier = Modifier
+                modifier = Modifier.background(color = Color.White)
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -148,7 +155,7 @@ fun SignUpVerifyContent(
         }
     ) { contentPadding ->
         Column(
-            modifier = Modifier
+            modifier = Modifier.background(color = Color.White)
                 .fillMaxSize()
                 .padding(contentPadding)
         ) {
@@ -160,6 +167,7 @@ fun SignUpVerifyContent(
                     header = stringResource(R.string.btn_sms_is_not_comming),
                     infoText = stringResource(R.string.txt_sms_not_coming_info),
                     context = LocalContext.current,
+                    networkStatusValidator = uiState.value.networkStatusValidator!!,
                     onDismissRequest = { isSheetVisible = false },
                 )
             }

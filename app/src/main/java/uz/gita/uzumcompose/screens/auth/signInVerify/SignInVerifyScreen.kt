@@ -1,6 +1,7 @@
 package uz.gita.uzumcompose.screens.auth.signInVerify
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,6 +51,7 @@ import uz.gita.presentation.auth.signInVerify.SignInVerifyVM
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.ui.components.AppBottomSheet
 import uz.gita.uzumcompose.ui.components.AppTextButton
+import uz.gita.uzumcompose.ui.components.NetworkErrorDialog
 import uz.gita.uzumcompose.ui.components.PinViewComponent
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.HintUzum
@@ -60,15 +61,20 @@ import uz.gita.uzumcompose.utils.extensions.makeReadable
 
 
 class SignInVerifyScreen(val phoneNumber: String) : Screen {
+
+
+//    @Inject
+//    lateinit var networkStatusValidator:NetworkStatusValidator
+
     @Composable
     override fun Content() {
         val viewModel: SignInVerifyContract.ViewModel = getViewModel<SignInVerifyVM>()
-
-            SignInVerifyContent(
-                phoneNumber,
-                viewModel.collectAsState(),
-                viewModel::onEventDispatcher
-            )
+        Log.d("TAG", "Content: $phoneNumber")
+        SignInVerifyContent(
+            phoneNumber,
+            viewModel.collectAsState(),
+            viewModel::onEventDispatcher
+        )
 
     }
 }
@@ -119,135 +125,137 @@ fun SignInVerifyContent(
         }.start()
     }
 
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Row(
+    if (uiState.value.networkError) {
+        NetworkErrorDialog(onDismissRequest = { onEventDispatcher(SignInVerifyContract.Intent.DismissDialog) })
+    }
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.White)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                contentDescription = "back",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+                    .padding(start = 16.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                        onEventDispatcher.invoke(SignInVerifyContract.Intent.SelectBack)
+                    }
+                    .padding(8.dp)
+            )
 
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "back",
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            onEventDispatcher.invoke(SignInVerifyContract.Intent.SelectBack)
-                        }
-                        .padding(8.dp)
+            AppTextButton(text = stringResource(id = R.string.btn_sms_is_not_comming)) {
+                isSheetVisible = true
+            }
+            //bottomsheet
+
+            if (isSheetVisible) {
+                AppBottomSheet(
+                    header = stringResource(R.string.btn_sms_is_not_comming),
+                    infoText = stringResource(R.string.txt_sms_not_coming_info),
+                    context = LocalContext.current,
+                    networkStatusValidator = uiState.value.networkStatusValidator!!,
+                    onDismissRequest = { isSheetVisible = false },
                 )
+            }
+        }
 
-                AppTextButton(text = stringResource(id = R.string.btn_sms_is_not_comming)) {
-                    isSheetVisible = true
-                }
-                //bottomsheet
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(top = 72.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = stringResource(R.string.txt_sms_was_sent),
+                color = Color.BlackUzum,
+                fontFamily = fontFamilyUzum,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp
+            )
 
-                if (isSheetVisible) {
-                    AppBottomSheet(
-                        header = stringResource(R.string.btn_sms_is_not_comming),
-                        infoText = stringResource(R.string.txt_sms_not_coming_info),
-                        context = LocalContext.current,
-                        onDismissRequest = { isSheetVisible = false },
-                    )
-                }
+            Text(
+                text = phoneNumber.makeReadable(),
+                color = Color.BlackUzum,
+                fontFamily = fontFamilyUzum,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                textAlign = TextAlign.Center,
+                fontSize = 24.sp
+            )
+
+            Spacer(modifier = Modifier.height(44.dp))
+
+            PinViewComponent(
+                digitCount = 6,
+                pinText = pinText,
+                onPinTextChanged = {
+                    pinText = it
+
+                    if (pinText.length == 6) {
+                        onEventDispatcher.invoke(SignInVerifyContract.Intent.GoToPin(pinText))
+                    }
+                },
+                error = uiState.value.codeError,
+                focusRequester = focusRequester
+
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (uiState.value.showProgress) {
+                CircularProgressIndicator(
+                    color = Color.HintUzum,
+                    strokeCap = StrokeCap.Square,
+                    strokeWidth = 4.dp,
+                    modifier = Modifier.scale(0.5f)
+                )
+            } else {
+                Spacer(modifier = Modifier.height(32.dp))
             }
 
-            Column(
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Box(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(top = 72.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .fillMaxWidth()
+                    .padding(horizontal = 60.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = stringResource(R.string.txt_sms_was_sent),
-                    color = Color.BlackUzum,
-                    fontFamily = fontFamilyUzum,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    textAlign = TextAlign.Center,
-                    fontSize = 24.sp
-                )
-
-                Text(
-                    text = phoneNumber.makeReadable(),
-                    color = Color.BlackUzum,
-                    fontFamily = fontFamilyUzum,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    textAlign = TextAlign.Center,
-                    fontSize = 24.sp
-                )
-
-                Spacer(modifier = Modifier.height(44.dp))
-
-                PinViewComponent(
-                    digitCount = 6,
-                    pinText = pinText,
-                    onPinTextChanged = {
-                        pinText = it
-
-                        if (pinText.length == 6) {
-                            onEventDispatcher.invoke(SignInVerifyContract.Intent.GoToPin(pinText))
-                        }
-                    },
-                    error = uiState.value.codeError,
-                    focusRequester = focusRequester
-
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                if (uiState.value.showProgress) {
-                    CircularProgressIndicator(
-                        color = Color.HintUzum,
-                        strokeCap = StrokeCap.Square,
-                        strokeWidth = 4.dp,
-                        modifier = Modifier.scale(0.5f)
-                    )
-                } else {
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 60.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (timeLeft == 0) {
-                        AppTextButton(text = stringResource(R.string.txt_send_code_again)) {
-                            onEventDispatcher.invoke(SignInVerifyContract.Intent.SelectResend)
-                        }
-                    } else {
-                        Text(
-                            text = stringResource(R.string.txt_after_60_sec).replace(
-                                oldValue = "60",
-                                newValue = timeLeft.toString()
-                            ),
-                            color = Color.HintUzum,
-                            fontFamily = fontFamilyUzum,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            textAlign = TextAlign.Center,
-                            style = TextStyle(lineHeight = 16.sp),
-                        )
+                if (timeLeft == 0) {
+                    AppTextButton(text = stringResource(R.string.txt_send_code_again)) {
+                        onEventDispatcher.invoke(SignInVerifyContract.Intent.SelectResend)
                     }
+                } else {
+                    Text(
+                        text = stringResource(R.string.txt_after_60_sec).replace(
+                            oldValue = "60",
+                            newValue = timeLeft.toString()
+                        ),
+                        color = Color.HintUzum,
+                        fontFamily = fontFamilyUzum,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        style = TextStyle(lineHeight = 16.sp),
+                    )
                 }
-
             }
 
         }
+
     }
+
 
 }
 

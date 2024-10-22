@@ -1,8 +1,8 @@
-package uz.gita.presentation.auth.repinnn
+package uz.gita.presentation.auth.setPin
 
 import org.orbitmvi.orbit.ContainerHost
 
-interface ExampleContract {
+interface SetPinContract {
 
     interface ViewModel : ContainerHost<UIState, SideEffect> {
         fun onEventDispatcher(intent: Intent)
@@ -21,7 +21,6 @@ interface ExampleContract {
 
     interface Direction {
         suspend fun moveToMainScreen()
-        suspend fun moveBack()
     }
 
     interface Intent {

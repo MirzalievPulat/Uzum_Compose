@@ -1,4 +1,4 @@
-package uz.gita.uzumcompose.screens.auth.repinnn
+package uz.gita.uzumcompose.screens.auth.setPin
 
 import android.content.Context.VIBRATOR_SERVICE
 import android.os.Build
@@ -30,11 +30,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,11 +46,10 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
-import uz.gita.presentation.auth.repinnn.ExampleContract
-import uz.gita.presentation.auth.repinnn.ExamplePinVM
+import uz.gita.presentation.auth.setPin.SetPinContract
+import uz.gita.presentation.auth.setPin.SetPinVM
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.ui.components.DigitBuilder
 import uz.gita.uzumcompose.ui.theme.BlackUzum
@@ -64,36 +60,36 @@ import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 import uz.gita.uzumcompose.utils.extensions.showToast
 
 
-class Example() : Screen {
+class SetPinScreen() : Screen {
     @Composable
     override fun Content() {
         val context = LocalContext.current
-        val viewModel: ExampleContract.ViewModel = getViewModel<ExamplePinVM>()
+        val viewModel: SetPinContract.ViewModel = getViewModel<SetPinVM>()
         viewModel.collectSideEffect {
             when(it){
-                is ExampleContract.SideEffect.Message -> context.showToast(it.message)
+                is SetPinContract.SideEffect.Message -> context.showToast(it.message)
             }
         }
 
-        ExampleContent(viewModel.collectAsState(), viewModel::onEventDispatcher)
+        SetPinContent(viewModel.collectAsState(), viewModel::onEventDispatcher)
     }
 
 }
 
 @Preview
 @Composable
-fun ExamplePreview() {
+fun SetPinPreview() {
     UzumComposeTheme {
-        ExampleContent(remember {
-            mutableStateOf(ExampleContract.UIState())
+        SetPinContent(remember {
+            mutableStateOf(SetPinContract.UIState())
         },{})
     }
 }
 
 @Composable
-fun ExampleContent(
-    uiState: State<ExampleContract.UIState>,
-    onEventDispatcher: (ExampleContract.Intent) -> Unit
+fun SetPinContent(
+    uiState: State<SetPinContract.UIState>,
+    onEventDispatcher: (SetPinContract.Intent) -> Unit
 ) {
 
     val systemUiController = rememberSystemUiController()
@@ -103,19 +99,13 @@ fun ExampleContent(
             darkIcons = true
         )
     }
-//    var code1 by remember { mutableStateOf("") }
-//    var text by remember { mutableStateOf("") }
-//    var finalColor by remember { mutableStateOf(Color.Green) }
     val vibrator = LocalContext.current.getSystemService(VIBRATOR_SERVICE) as Vibrator
-//    var errorAnim by remember { mutableLongStateOf(0L) }
     val transition = remember { Animatable(0f) }
 
-//    var isSecond by remember { mutableStateOf(false) }
 
     //error animation
     LaunchedEffect(uiState.value.errorAnim) {
         if (uiState.value.errorAnim != 0L) {
-
             vibrator.cancel()
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -154,13 +144,6 @@ fun ExampleContent(
     }
 
 
-//    //check
-//    if (text.length == 4) {
-//        onEventDispatcher(ExampleContract.Intent.ReachedFour(text))
-//    }
-
-
-
 
     Column(
         modifier = Modifier
@@ -179,13 +162,13 @@ fun ExampleContent(
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                 contentDescription = "Back arrow",
-                tint = if (uiState.value.isSecondTime) Color.Black else Color.Transparent,
+//                tint = if (uiState.value.isSecondTime) Color.Black else Color.Transparent,
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable(
                         enabled = uiState.value.isSecondTime,
                         onClick = {
-                            onEventDispatcher(ExampleContract.Intent.ClickBack)
+                            onEventDispatcher(SetPinContract.Intent.ClickBack)
                         }
                     )
                     .padding(8.dp)
@@ -237,7 +220,7 @@ fun ExampleContent(
 
             for (i in 1..3) {
                 DigitBuilder(number = "$i") {
-                    onEventDispatcher(ExampleContract.Intent.ClickDigit("$i"))
+                    onEventDispatcher(SetPinContract.Intent.ClickDigit("$i"))
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
@@ -250,7 +233,7 @@ fun ExampleContent(
 
             for (i in 4..6) {
                 DigitBuilder(number = "$i") {
-                    onEventDispatcher(ExampleContract.Intent.ClickDigit("$i"))
+                    onEventDispatcher(SetPinContract.Intent.ClickDigit("$i"))
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
@@ -263,7 +246,7 @@ fun ExampleContent(
 
             for (i in 7..9) {
                 DigitBuilder(number = "$i") {
-                    onEventDispatcher(ExampleContract.Intent.ClickDigit("$i"))
+                    onEventDispatcher(SetPinContract.Intent.ClickDigit("$i"))
                 }
                 Spacer(modifier = Modifier.weight(1f))
             }
@@ -284,7 +267,7 @@ fun ExampleContent(
             Spacer(modifier = Modifier.weight(1f))
 
             DigitBuilder(number = "0") {
-                onEventDispatcher(ExampleContract.Intent.ClickDigit("0"))
+                onEventDispatcher(SetPinContract.Intent.ClickDigit("0"))
             }
 
             Spacer(modifier = Modifier.weight(1f))
@@ -296,7 +279,7 @@ fun ExampleContent(
                     .background(Color.Transparent, shape = CircleShape)
                     .clickable(enabled = uiState.value.currentCode.isNotEmpty(),
                         onClick = {
-                            onEventDispatcher(ExampleContract.Intent.ClickDelete)
+                            onEventDispatcher(SetPinContract.Intent.ClickDelete)
                         }),
                 contentAlignment = Alignment.Center
             ) {

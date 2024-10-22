@@ -1,5 +1,6 @@
 package uz.gita.presentation.auth.splash
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +25,7 @@ class SplashVM @Inject constructor(
             delay(500)
             getNextScreen.invoke()
                 .onSuccess {
+                    Log.d("TAG", "after splash: ${it.name}")
                     when (it) {
                         AfterSplash.SIGN_UP -> {
                             direction.moveToSignUp()

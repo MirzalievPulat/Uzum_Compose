@@ -10,10 +10,10 @@ import cafe.adriel.voyager.navigator.Navigator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import uz.gita.uzumcompose.screens.auth.pin.PinScreen
-import uz.gita.uzumcompose.screens.auth.repinnn.Example
+import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.uzumcompose.screens.auth.enterPin.EnterPinScreen
+import uz.gita.uzumcompose.screens.auth.splash.SplashScreen
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
-import uz.gita.uzumcompose.utils.NetworkStatusValidator
 import uz.gita.uzumcompose.utils.navigation.NavigationHandler
 import javax.inject.Inject
 
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             UzumComposeTheme {
-                Navigator(Example()) { navigator ->
+                Navigator(SplashScreen()) { navigator ->
                     LaunchedEffect(key1 = navigator) {
                         navigationHandler.navigationStack
                             .onEach {

@@ -19,6 +19,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,11 +37,14 @@ import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import uz.gita.uzumcompose.screens.pages.home.HomePage
 import uz.gita.uzumcompose.screens.pages.menu.MenuPage
 import uz.gita.uzumcompose.screens.pages.message.MessagePage
 import uz.gita.uzumcompose.screens.pages.payment.PaymentPage
 import uz.gita.uzumcompose.screens.pages.transfer.TransferPage
+import uz.gita.uzumcompose.ui.theme.DoneBg
+import uz.gita.uzumcompose.ui.theme.PinkUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 
@@ -68,8 +72,17 @@ fun MainScreenContent() {
     TabNavigator(tab = HomePage) {
         Scaffold(
             content = {
-                val window = (LocalView.current.context as Activity).window
-                window.statusBarColor = Color.Black.toArgb()
+
+                val systemUiController = rememberSystemUiController()
+                SideEffect {
+                    systemUiController.setStatusBarColor(
+                        color = Color.White,
+                        darkIcons = false
+                    )
+                    systemUiController.setNavigationBarColor(
+                        color = Color.White,
+                    )
+                }
                 Box(modifier = Modifier
                     .padding(it)
                     .fillMaxSize()) {

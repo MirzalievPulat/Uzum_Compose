@@ -1,6 +1,8 @@
 package uz.gita.presentation.helper.extensions
 
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 fun String.makeReadable():String{
@@ -22,7 +24,14 @@ fun formatToMoney(value: Int): String {
     return formatter.format(value)
 }
 
+fun String.toDate():String{
+    return SimpleDateFormat("dd/MM/yy", Locale.getDefault()).format(Date(this.toLong()))
+}
+
+fun String.toTime():String{
+    return SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(this.toLong()))
+}
+
 fun main() {
-    println("+998936683105".makeReadable())
-    println("polat")
+    println("1190660400000".toDate())
 }

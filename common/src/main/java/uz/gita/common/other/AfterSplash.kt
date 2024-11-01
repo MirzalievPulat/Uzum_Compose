@@ -7,3 +7,7 @@ enum class AfterSplash(val screen: Int) {
 enum class GenderType(val gender:Int){
     MALE(0),FEMALE(1)
 }
+
+enum class CardsType(){
+    RECENT, MY_CARDS, BY_SEARCH
+}

@@ -18,13 +18,11 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
@@ -38,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.ui.theme.HintUzum
 import uz.gita.uzumcompose.ui.theme.PinkUzum
-import uz.gita.uzumcompose.ui.theme.TextField
+import uz.gita.uzumcompose.ui.theme.WhiteBg
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 
 @Composable
@@ -46,9 +44,9 @@ fun AppTextField(
     modifier: Modifier = Modifier,
     hint: String,
     value: String,
-    errorText:String? = null,
+    errorText: String? = null,
     onValueChange: (String) -> Unit,
-    enabled :Boolean = true,
+    enabled: Boolean = true,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     leadingIcon: @Composable (() -> Unit)? = null,
@@ -68,14 +66,13 @@ fun AppTextField(
             fontWeight = FontWeight.Medium
         ),
         visualTransformation = visualTransformation,
-        cursorBrush = SolidColor(Color.PinkUzum) ,
+        cursorBrush = SolidColor(Color.PinkUzum),
         decorationBox = { innerTextField ->
             Column {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(color = Color.TextField, shape = RoundedCornerShape(12.dp))
-//                        .height(50.dp)
+                        .background(color = Color.WhiteBg, shape = RoundedCornerShape(12.dp))
                         .defaultMinSize(minHeight = 50.dp)
                         .padding(start = 12.dp, end = 6.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -87,7 +84,8 @@ fun AppTextField(
                             .padding(start = if (leadingIcon != null) 8.dp else 0.dp)
                     ) {
                         if (value.isEmpty()) {
-                            Text(text = hint,
+                            Text(
+                                text = hint,
                                 style = TextStyle(
                                     fontFamily = fontFamilyUzum,
                                     fontWeight = FontWeight.Medium,
@@ -122,42 +120,46 @@ fun AppTextField(
 @Preview
 @Composable
 fun Preview() {
-    Surface (modifier = Modifier.fillMaxSize()){
-        Column {
+    Column(modifier = Modifier.fillMaxSize().background(color = Color.White)) {
 
-            Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-            AppTextField(
-                hint = "Phone",
-                value = "",
-                onValueChange = {
+        AppTextField(
+            hint = "Phone",
+            value = "",
+            onValueChange = {
 
-                },
-                errorText = "asdsdf\nasdf",
-                leadingIcon = {
-                    Text(
-                        text = "+998",
-                        style = TextStyle(
-                            fontFamily = fontFamilyUzum,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 14.sp,
-                        ),
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.close_eye),
-                        contentDescription = "eye",
-                        modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .clickable { }
-                            .padding(8.dp)
-                    )
-                },
-            )
-        }
+            },
+            leadingIcon = {
+                Text(
+                    text = "+998",
+                    style = TextStyle(
+                        fontFamily = fontFamilyUzum,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp,
+                    ),
+                )
+            },
+            enabled = false,
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.close_eye),
+                    contentDescription = "eye",
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .clickable { }
+                        .padding(8.dp)
+                )
+            },
+            errorText = "Salom dunyo",
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .clickable {
 
+            }
+        )
     }
+
 
 }

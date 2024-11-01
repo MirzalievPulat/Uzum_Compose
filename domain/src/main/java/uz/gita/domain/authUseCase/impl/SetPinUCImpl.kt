@@ -1,7 +1,7 @@
 package uz.gita.domain.authUseCase.impl
 
 import android.util.Log
-import uz.gita.data.repository.AuthRepository
+import uz.gita.entity.repository.AuthRepository
 import uz.gita.domain.authUseCase.SetPinUC
 import javax.inject.Inject
 

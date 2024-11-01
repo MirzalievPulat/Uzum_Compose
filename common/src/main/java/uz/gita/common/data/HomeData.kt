@@ -1,5 +1,7 @@
 package uz.gita.common.data
 
+import java.io.Serializable
+
 
 sealed interface HomeData {
     data class TotalBalance(val balance:String)
@@ -15,7 +17,7 @@ sealed interface HomeData {
         val phone: String,
         val birthDate: String,
         val gender: String
-    )
+    ):Serializable
 
     data class UpdateInfo(
         val firstName: String,

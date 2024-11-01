@@ -32,6 +32,7 @@ fun AppTextButton(
     color: Color = Color.PinkUzum,
     textAlign: TextAlign = TextAlign.Center,
     clickEnabled: Boolean = true,
+    zeroPadding:Boolean = false,
     onClick: () -> Unit,
 ) {
     Text(
@@ -48,7 +49,7 @@ fun AppTextButton(
             .clickable(enabled = clickEnabled) {
                 onClick.invoke()
             }
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = if(zeroPadding) 0.dp else 16.dp)
             .wrapContentHeight(Alignment.CenterVertically)
     )
 

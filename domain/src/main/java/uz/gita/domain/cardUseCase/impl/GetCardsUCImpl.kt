@@ -3,7 +3,7 @@ package uz.gita.domain.cardUseCase.impl
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import uz.gita.common.data.CardData
-import uz.gita.data.repository.CardRepository
+import uz.gita.entity.repository.CardRepository
 import uz.gita.domain.cardUseCase.GetCardsUC
 import javax.inject.Inject
 

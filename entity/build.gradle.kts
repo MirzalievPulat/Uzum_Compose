@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "uz.gita.data"
+    namespace = "uz.gita.entity"
     compileSdk = 34
 
     defaultConfig {
@@ -54,4 +54,7 @@ dependencies {
     //chucker
     debugImplementation ("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation ("com.github.chuckerteam.chucker:library-no-op:4.0.0")
+
+    //paging
+    implementation("androidx.paging:paging-compose:3.3.2")
 }

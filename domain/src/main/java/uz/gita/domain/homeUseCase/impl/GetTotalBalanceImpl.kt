@@ -3,7 +3,7 @@ package uz.gita.domain.homeUseCase.impl
 import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import uz.gita.common.data.HomeData
-import uz.gita.data.repository.HomeRepository
+import uz.gita.entity.repository.HomeRepository
 import uz.gita.domain.homeUseCase.GetTotalBalanceUC
 import javax.inject.Inject
 

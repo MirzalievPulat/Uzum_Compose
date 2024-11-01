@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import uz.gita.uzumcompose.ui.theme.PinkUzum
+import uz.gita.uzumcompose.ui.theme.PinkUzumPlain
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 
@@ -29,13 +30,21 @@ import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 fun AppButton(
     text: String,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = TextStyle(),
     showProgress:Boolean = false,
-    onClick: () -> Unit,
+    enabled:Boolean = true,
+    containerColor:Color = Color.PinkUzum,
+    onClick: () -> Unit
 ) {
     Button(modifier = modifier
         .height(50.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors().copy(containerColor = Color.PinkUzum),
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            disabledContainerColor = Color.PinkUzumPlain,
+            containerColor = containerColor,
+            disabledContentColor = Color.White
+        ),
         onClick = onClick) {
 
         if (showProgress) {
@@ -48,7 +57,7 @@ fun AppButton(
         } else {
             Text(
                 text = text,
-                style = TextStyle(
+                style = textStyle.copy(
                     fontFamily = fontFamilyUzum,
                     fontWeight = FontWeight.Medium 
                 ),

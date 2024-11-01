@@ -42,8 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import uz.gita.presentation.home.menu.MenuPageContract
-import uz.gita.presentation.home.menu.MenuPageVM
+import uz.gita.presentation.pages.menu.MenuPageContract
+import uz.gita.presentation.pages.menu.MenuPageVM
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.screens.main.PolatTab
 import uz.gita.uzumcompose.screens.main.PolatTabOptions

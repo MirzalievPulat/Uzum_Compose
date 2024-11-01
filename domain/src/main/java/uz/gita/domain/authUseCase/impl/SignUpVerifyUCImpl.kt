@@ -1,7 +1,7 @@
 package uz.gita.domain.authUseCase.impl
 
 import uz.gita.common.data.AuthData
-import uz.gita.data.repository.AuthRepository
+import uz.gita.entity.repository.AuthRepository
 import uz.gita.domain.authUseCase.SignUpVerifyUC
 import javax.inject.Inject
 

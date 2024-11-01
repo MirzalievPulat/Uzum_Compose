@@ -81,15 +81,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import cafe.adriel.voyager.hilt.getViewModel
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.orbitmvi.orbit.compose.collectAsState
-import uz.gita.presentation.home.home.HomePageContract
-import uz.gita.presentation.home.home.HomePageVM
+import uz.gita.presentation.pages.home.HomePageContract
+import uz.gita.presentation.pages.home.HomePageVM
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.screens.main.PolatTab
 import uz.gita.uzumcompose.screens.main.PolatTabOptions
+import uz.gita.uzumcompose.ui.components.NetworkErrorDialog
 import uz.gita.uzumcompose.ui.components.TransparentTextField
 import uz.gita.uzumcompose.ui.theme.BlackUzum
 import uz.gita.uzumcompose.ui.theme.BlackUzum2
@@ -110,6 +109,7 @@ import uz.gita.uzumcompose.utils.extensions.formatToMoney
 //adamari
 
 object HomePage : PolatTab {
+    private fun readResolve(): Any = HomePage
     override val polatTabOptions: PolatTabOptions
         @Composable
         get() {
@@ -143,7 +143,8 @@ private fun HomePreview(modifier: Modifier = Modifier) {
     UzumComposeTheme {
         HomeContent(uiState = remember {
             mutableStateOf(HomePageContract.UIState())
-        }) {
+        }
+        ) {
         }
     }
 }
@@ -168,6 +169,10 @@ private fun HomeContent(
             color = Color.PinkUzum,
             darkIcons = false
         )
+    }
+
+    if (uiState.value.networkDialog) {
+        NetworkErrorDialog { onEventDispatcher(HomePageContract.Intent.NetworkCloseClick) }
     }
 
     Scaffold(
@@ -209,7 +214,7 @@ private fun HomeContent(
                 .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(8.dp))
-            SearchSection()
+            SearchSection(onEventDispatcher)
             Spacer(modifier = Modifier.height(32.dp))
             CardSection(uiState, onEventDispatcher)
 
@@ -233,7 +238,7 @@ private fun HomeContent(
                             .fillMaxWidth()
                     ) {
                         Spacer(modifier = Modifier.height(36.dp))
-                        CashbackMonitoringSection()
+                        CashbackMonitoringSection(uiState,onEventDispatcher)
                         Spacer(modifier = Modifier.height(32.dp))
                         FastAccessSection()
                         Spacer(modifier = Modifier.height(16.dp))
@@ -266,7 +271,11 @@ private fun HomeContent(
                     Image(
                         painter = painterResource(id = R.drawable.refresh_button_gradient),
                         contentDescription = "Refresh",
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier
+                            .background(color = Color.Transparent, CircleShape)
+                            .clip(CircleShape)
+                            .clickable { onEventDispatcher(HomePageContract.Intent.UpdateClick) }
+                            .padding(8.dp)
                     )
 
                 }
@@ -275,7 +284,7 @@ private fun HomeContent(
             }
 
         }
-        Box (modifier = Modifier.fillMaxWidth()){
+        Box(modifier = Modifier.fillMaxWidth()) {
             PullRefreshIndicator(
                 refreshing = uiState.value.isLoading,
                 state = pullRefreshState,
@@ -291,7 +300,7 @@ private fun HomeContent(
 
 //@Preview
 @Composable
-fun SearchSection() {
+fun SearchSection(onEventDispatcher: (HomePageContract.Intent) -> Unit) {
 //    Surface(modifier = Modifier.fillMaxSize()) {
     println("SearchSection")
     Row(
@@ -331,13 +340,12 @@ fun SearchSection() {
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(color = Color.PinkUzumPlain),
+                .background(color = Color.PinkUzumPlain)
+                .clickable { onEventDispatcher(HomePageContract.Intent.ProfileClick) },
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(
-                    id = R.drawable.ic_person
-                ),
+                painter = painterResource(id = R.drawable.ic_person),
                 contentDescription = "Person",
                 modifier = Modifier.size(24.dp)
             )
@@ -382,16 +390,16 @@ fun CardSection(
                     id = R.drawable.ic_settings_main
                 ),
                 contentDescription = "Settings",
-                modifier = Modifier.clickable {
-                    onEventDispatcher.invoke(
-                        HomePageContract.Intent.AddCardClick
-                    )
-                }
+                modifier = Modifier
+                    .background(color = Color.Transparent, CircleShape)
+                    .clip(CircleShape)
+                    .padding(8.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = formatToMoney(animatedBalance),
+                text = if (uiState.value.isMoneyVisible) formatToMoney(animatedBalance)
+                else "********",
                 style = TextStyle(
                     fontFamily = fontUzumPro,
                     fontWeight = FontWeight.Bold,
@@ -417,6 +425,13 @@ fun CardSection(
             Image(
                 painter = if (moneyVisible) painterResource(id = R.drawable.ic_eye_close_24) else painterResource(id = R.drawable.ic_eye_24),
                 contentDescription = "Visibility",
+                modifier = Modifier
+                    .background(color = Color.Transparent, CircleShape)
+                    .clip(CircleShape)
+                    .clickable {
+                        onEventDispatcher(HomePageContract.Intent.EyeClick)
+                    }
+                    .padding(8.dp)
             )
 
             Spacer(modifier = Modifier.width(32.dp))
@@ -432,6 +447,9 @@ fun CardSection(
                         .width(130.dp)
                         .height(80.dp)
                         .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            onEventDispatcher(HomePageContract.Intent.CardClick(card))
+                        }
                 ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         Image(
@@ -447,7 +465,8 @@ fun CardSection(
                         ) {
                             Text(
                                 modifier = Modifier.padding(top = 8.dp),
-                                text = formatToMoney(card.amount) + " UZS",
+                                text = if (uiState.value.isMoneyVisible) formatToMoney(card.amount) + " UZS"
+                                else "******** UZS",
                                 style = TextStyle(
                                     color = Color.White,
                                     fontFamily = fontUzumPro,
@@ -499,7 +518,10 @@ fun CardSection(
 
 //@Preview
 @Composable
-fun CashbackMonitoringSection() {
+fun CashbackMonitoringSection(
+    uiState: State<HomePageContract.UIState>,
+    onEventDispatcher: (HomePageContract.Intent) -> Unit
+) {
 //    Surface(modifier = Modifier.fillMaxSize()) {
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -538,7 +560,7 @@ fun CashbackMonitoringSection() {
                 Spacer(modifier = Modifier.weight(1f))
                 Row(verticalAlignment = Alignment.Bottom) {
                     Text(
-                        text = "1 020",
+                        text = if (uiState.value.isMoneyVisible) "1 020" else "*****",
                         style = TextStyle(
                             color = Color.Black,
                             fontFamily = fontUzumPro,
@@ -576,7 +598,10 @@ fun CashbackMonitoringSection() {
                 .height(130.dp)
                 .weight(1f),
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            onClick = {
+                onEventDispatcher(HomePageContract.Intent.MonitoringClick)
+            },
         ) {
             Column(
                 modifier = Modifier
@@ -700,7 +725,7 @@ data class BillBoard(
 //@Preview
 @Composable
 fun BillBoardSection() {
-    val pagerState = rememberPagerState()
+
 
     val list = listOf(
         BillBoard("Low prices \nevery day", "Go shopping", R.drawable.uzum_shagzoda, Color.PinkUzumPlain),
@@ -715,21 +740,7 @@ fun BillBoardSection() {
         BillBoard("The best delivery \nis in Uzum Market", "Order", R.drawable.uzum_yetkazish, Color.HintUzum),
     )
 
-    CompositionLocalProvider(value = LocalOverscrollConfiguration provides null) {
-        HorizontalPager(
-//            modifier = Modifier.height(250.dp),
-            count = Int.MAX_VALUE,
-            contentPadding = PaddingValues(horizontal = 30.dp),
-            itemSpacing = 12.dp,
-            state = pagerState
-        ) { index ->
-            list.getOrNull(
-                index % (list.size)
-            )?.let { item ->
-                BillBoardCard(item)
-            }
-        }
-    }
+    val pagerState = androidx.compose.foundation.pager.rememberPagerState(pageCount = { Int.MAX_VALUE })
 
     LaunchedEffect(key1 = Unit, block = {
         var initPage = Int.MAX_VALUE / 2
@@ -740,6 +751,20 @@ fun BillBoardSection() {
     })
 
 
+    CompositionLocalProvider(value = LocalOverscrollConfiguration provides null) {
+        androidx.compose.foundation.pager.HorizontalPager(
+            contentPadding = PaddingValues(horizontal = 30.dp),
+            pageSpacing = 12.dp,
+            state = pagerState
+        ) { index ->
+            list.getOrNull(
+                index % (list.size)
+            )?.let { item ->
+                BillBoardCard(item)
+            }
+        }
+    }
+
 }
 
 @Composable
@@ -749,7 +774,8 @@ fun BillBoardCard(billBoard: BillBoard) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(9 / 3f)
+            .aspectRatio(9 / 3f),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Row(
             modifier = Modifier

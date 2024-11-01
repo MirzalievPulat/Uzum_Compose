@@ -1,8 +1,10 @@
 package uz.gita.uzumcompose.screens.pages.transfer
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,8 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -44,9 +45,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cafe.adriel.voyager.navigator.tab.Tab
-import cafe.adriel.voyager.navigator.tab.TabOptions
+import cafe.adriel.voyager.hilt.getViewModel
+import cafe.adriel.voyager.navigator.LocalNavigator
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import uz.gita.presentation.pages.transfer.TransferPageContract
+import uz.gita.presentation.pages.transfer.TransferPageVM
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.screens.main.PolatTab
 import uz.gita.uzumcompose.screens.main.PolatTabOptions
@@ -58,6 +61,7 @@ import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 
 object TransferPage : PolatTab {
+    private fun readResolve(): Any = TransferPage
     override val polatTabOptions: PolatTabOptions
         @Composable
         get() {
@@ -76,7 +80,8 @@ object TransferPage : PolatTab {
 
     @Composable
     override fun Content() {
-        TransferContent()
+        val viewModel: TransferPageContract.ViewModel = getViewModel<TransferPageVM>()
+        TransferPageContent(viewModel::onEventDispatcher)
     }
 }
 
@@ -84,12 +89,14 @@ object TransferPage : PolatTab {
 @Composable
 fun TransferContentPreview(modifier: Modifier = Modifier) {
     UzumComposeTheme {
-        TransferContent()
+        TransferPageContent({})
     }
 }
 
 @Composable
-fun TransferContent(modifier: Modifier = Modifier) {
+fun TransferPageContent(
+    onEventDispatcher: (TransferPageContract.Intent) -> Unit
+) {
 
     val systemUiController = rememberSystemUiController()
     SideEffect {
@@ -128,7 +135,7 @@ fun TransferContent(modifier: Modifier = Modifier) {
                 .padding(it)
                 .verticalScroll(rememberScrollState())
         ) {
-            CardTransferSection()
+            CardTransferSection(onEventDispatcher)
             ShapesSection()
             OptionsSection()
         }
@@ -136,15 +143,23 @@ fun TransferContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CardTransferSection() {
+fun CardTransferSection(onEventDispatcher: (TransferPageContract.Intent) -> Unit) {
     var value by remember { mutableStateOf("") }
+    val navigator = LocalNavigator.current
 
-    AppTextField(hint = "Card number or name",
+    AppTextField(
+        hint = stringResource(R.string.card_number_or_name),
         value = value,
         onValueChange = { value = it },
+        enabled = false,
         modifier = Modifier
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp, top = 8.dp)
-            .height(56.dp),
+            .height(50.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable {
+                Log.d("TAG", "CardTransferSection: to Transfer oynage bosildi")
+                onEventDispatcher(TransferPageContract.Intent.PanTextFieldClick)
+            },
         trailingIcon = {
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_24_scan_card),

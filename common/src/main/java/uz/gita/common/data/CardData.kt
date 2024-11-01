@@ -1,6 +1,7 @@
 package uz.gita.common.data
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 sealed interface CardData {
     data class CardInfo(
@@ -13,7 +14,7 @@ sealed interface CardData {
         val expiredMonth: String = "",
         val themeType: String = "",
         val isVisible: String = ""
-    )
+    ):Serializable
 
     data class CardMessage(val message:String)
 

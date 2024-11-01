@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import uz.gita.common.data.AuthData
-import uz.gita.data.repository.AuthRepository
+import uz.gita.entity.repository.AuthRepository
 import uz.gita.domain.authUseCase.SignUpUC
 import javax.inject.Inject
 

@@ -16,4 +16,5 @@
     <color name="pink2">#ffA07AE7</color>//7025fb
     <color name="pink">#ff7025fb</color>//7025fb
     <color name="icon_white_pink">#CFBCF3</color>
+    <color name="light_gray">#CCCCCC</color>
 </resources>

@@ -58,6 +58,7 @@ import uz.gita.presentation.auth.setPin.SetPinContract
 import uz.gita.uzumcompose.R
 import uz.gita.uzumcompose.ui.components.DigitBuilder
 import uz.gita.uzumcompose.ui.theme.BlackUzum
+import uz.gita.uzumcompose.ui.theme.DarkGreenUzum
 import uz.gita.uzumcompose.ui.theme.HintUzum
 import uz.gita.uzumcompose.ui.theme.PinkUzum
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
@@ -181,7 +182,7 @@ fun EnterPinScreenContent(
                         .size(16.dp)
                         .background(
                             color = if (uiState.value.currentCode.length == 4) {
-                                if (uiState.value.fourDigitCorrect) Color.Green else Color.Red
+                                if (uiState.value.fourDigitCorrect) Color.DarkGreenUzum else Color.Red
                             } else if (uiState.value.currentCode.length > i) Color.PinkUzum
                             else Color.HintUzum,
                             shape = CircleShape

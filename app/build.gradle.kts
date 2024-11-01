@@ -104,4 +104,6 @@ dependencies {
     implementation ("com.karumi:dexter:6.2.3")
 
     implementation ("androidx.compose.ui:ui-tooling")
+
+    implementation("androidx.paging:paging-compose:3.3.2")
 }

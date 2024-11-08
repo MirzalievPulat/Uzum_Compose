@@ -17,7 +17,7 @@ import uz.gita.domain.validatorUseCase.FirstNameValidatorUC
 import uz.gita.domain.validatorUseCase.LastNameValidatorUC
 import uz.gita.domain.validatorUseCase.PasswordValidatorUC
 import uz.gita.domain.validatorUseCase.PhoneNumberValidatorUC
-import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.common.other.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.onFailure
 import uz.gita.presentation.helper.extensions.onSuccess
 import javax.inject.Inject

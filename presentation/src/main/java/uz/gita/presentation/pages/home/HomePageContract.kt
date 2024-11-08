@@ -2,6 +2,7 @@ package uz.gita.presentation.pages.home
 
 import org.orbitmvi.orbit.ContainerHost
 import uz.gita.common.data.CardData
+import uz.gita.common.data.HomeData
 
 interface HomePageContract {
 
@@ -11,10 +12,12 @@ interface HomePageContract {
 
     data class UIState(
         val isLoading: Boolean = false,
+        val lastTransfersLoading: Boolean = false,
         val networkDialog:Boolean = false,
         val totalBalance:String = "0",
         val isMoneyVisible:Boolean = false,
-        val cardList:List<CardData.CardInfo> = emptyList()
+        val cardList:List<CardData.CardInfo> = listOf(CardData.CardInfo("","","10000","po","8686","28","12")),
+        val lastTransfers:List<HomeData.TransferInfo> = emptyList()
     )
 
     sealed interface SideEffect {
@@ -25,10 +28,12 @@ interface HomePageContract {
         suspend fun goUpdateCard(cardInfo: CardData.CardInfo)
         suspend fun goProfileScreen()
         suspend fun goMonitoring()
+        suspend fun goSettingsCard()
     }
 
     interface Intent {
         object UpdateClick: Intent
+        object SettingsClick: Intent
         object EyeClick:Intent
         object NetworkCloseClick:Intent
         object ProfileClick:Intent

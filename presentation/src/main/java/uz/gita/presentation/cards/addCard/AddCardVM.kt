@@ -1,6 +1,5 @@
 package uz.gita.presentation.cards.addCard
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,14 +12,10 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import uz.gita.common.data.CardData
 import uz.gita.domain.cardUseCase.AddCardUC
-import uz.gita.domain.cardUseCase.GetCardsUC
-import uz.gita.domain.homeUseCase.GetTotalBalanceUC
 import uz.gita.domain.validatorUseCase.CardPanValidatorUC
 import uz.gita.domain.validatorUseCase.FirstNameValidatorUC
-import uz.gita.domain.validatorUseCase.LastNameValidatorUC
 import uz.gita.domain.validatorUseCase.YearValidatorUC
-import uz.gita.presentation.auth.signIn.SignInContract
-import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.common.other.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.onFailure
 import uz.gita.presentation.helper.extensions.onSuccess
 import javax.inject.Inject

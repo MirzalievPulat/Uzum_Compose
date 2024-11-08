@@ -18,7 +18,7 @@ import uz.gita.common.other.CardsType
 import uz.gita.domain.cardUseCase.GetCardsUC
 import uz.gita.domain.transferUseCase.GetCardOwnerUC
 import uz.gita.domain.transferUseCase.GetLastTransferredCardsUC
-import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.common.other.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.onFailure
 import uz.gita.presentation.helper.extensions.onSuccess
 import javax.inject.Inject

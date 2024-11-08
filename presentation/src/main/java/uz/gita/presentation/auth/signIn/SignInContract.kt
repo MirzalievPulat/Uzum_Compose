@@ -1,8 +1,7 @@
 package uz.gita.presentation.auth.signIn
 
 import org.orbitmvi.orbit.ContainerHost
-import uz.gita.presentation.helper.NetworkStatusValidator
-import java.lang.Error
+import uz.gita.common.other.NetworkStatusValidator
 
 interface SignInContract {
 

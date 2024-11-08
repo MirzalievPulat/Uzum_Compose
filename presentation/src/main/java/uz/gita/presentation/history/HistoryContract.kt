@@ -29,5 +29,6 @@ interface HistoryContract {
     interface Intent {
         object Back: Intent
         object NetworkDismiss:Intent
+        object UpdateClick:Intent
     }
 }

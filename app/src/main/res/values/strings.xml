@@ -86,4 +86,9 @@
     <string name="documents_and_details">Documents and details</string>
     <string name="enter_the_code">Enter the code which we sent you to the number \n#</string>
     <string name="monitoring">Monitoring</string>
+    <string name="no_transactions">No transactions</string>
+    <string name="no_history">No history</string>
+    <string name="theme">Theme</string>
+    <string name="info">Info</string>
+    <string name="visibility">Visibility</string>
 </resources>

@@ -375,12 +375,12 @@ fun UpdateCardContent(
             )
 
             Image(
-                painter = painterResource(R.drawable.ic_custom_card_bg_3),
+                painter = painterResource(R.drawable.ic_limit_card),
                 contentDescription = null,
                 modifier = Modifier
                     .border(
                         width = 4.dp,
-                        color = if (uiState.value.theme.toCardImage() == R.drawable.ic_custom_card_bg_3) Color.PinkUzum
+                        color = if (uiState.value.theme.toCardImage() == R.drawable.ic_limit_card) Color.PinkUzum
                         else Color.Transparent,
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -393,12 +393,12 @@ fun UpdateCardContent(
             )
 
             Image(
-                painter = painterResource(R.drawable.ic_custom_card_bg_4),
+                painter = painterResource(R.drawable.bg_uzum_card_44),
                 contentDescription = null,
                 modifier = Modifier
                     .border(
                         width = 4.dp,
-                        color = if (uiState.value.theme.toCardImage() == R.drawable.ic_custom_card_bg_4) Color.PinkUzum
+                        color = if (uiState.value.theme.toCardImage() == R.drawable.bg_uzum_card_44) Color.PinkUzum
                         else Color.Transparent,
                         shape = RoundedCornerShape(12.dp)
                     )

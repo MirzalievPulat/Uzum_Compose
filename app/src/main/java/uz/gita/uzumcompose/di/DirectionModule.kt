@@ -18,6 +18,7 @@ import uz.gita.presentation.pages.home.HomePageContract
 import uz.gita.presentation.pages.menu.MenuPageContract
 import uz.gita.presentation.cards.addCard.AddCardContract
 import uz.gita.presentation.cards.doneTransfer.DoneTransferContract
+import uz.gita.presentation.cards.settingsCard.SettingsCardContract
 import uz.gita.presentation.cards.transfer.TransferContract
 import uz.gita.presentation.cards.transferFromTo.TransferFromToContract
 import uz.gita.presentation.cards.updateCard.UpdateCardContract
@@ -34,6 +35,7 @@ import uz.gita.uzumcompose.screens.auth.signUpVerify.SignUpVerifyDirections
 import uz.gita.uzumcompose.screens.auth.splash.SplashDirections
 import uz.gita.uzumcompose.screens.card.addCardScreen.AddCardDirections
 import uz.gita.uzumcompose.screens.card.doneScreen.DoneTransferDirections
+import uz.gita.uzumcompose.screens.card.settingsCard.SettingsCardDirections
 import uz.gita.uzumcompose.screens.card.transferCard.TransferDirections
 import uz.gita.uzumcompose.screens.card.transferFromTo.TransferFromToDirections
 import uz.gita.uzumcompose.screens.card.updateCard.UpdateCardDirections
@@ -102,5 +104,8 @@ interface DirectionModule {
 
     @[Binds ViewModelScoped]
     fun bindDoneTransferDirection(impl: DoneTransferDirections): DoneTransferContract.Direction
+
+    @[Binds ViewModelScoped]
+    fun bindSettingsCardDirection(impl: SettingsCardDirections): SettingsCardContract.Direction
 
 }

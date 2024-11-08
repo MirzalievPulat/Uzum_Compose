@@ -40,6 +40,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -57,9 +58,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
@@ -83,6 +86,7 @@ import androidx.core.text.isDigitsOnly
 import cafe.adriel.voyager.hilt.getViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.orbitmvi.orbit.compose.collectAsState
+import uz.gita.presentation.helper.extensions.toTime
 import uz.gita.presentation.pages.home.HomePageContract
 import uz.gita.presentation.pages.home.HomePageVM
 import uz.gita.uzumcompose.R
@@ -104,6 +108,8 @@ import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 import uz.gita.uzumcompose.ui.theme.fontUzumPro
 import uz.gita.uzumcompose.utils.extensions.drawDashedBorder
 import uz.gita.uzumcompose.utils.extensions.formatToMoney
+import uz.gita.uzumcompose.utils.extensions.toCardImage
+import uz.gita.uzumcompose.utils.extensions.toPrivatePan
 
 
 //adamari
@@ -238,7 +244,7 @@ private fun HomeContent(
                             .fillMaxWidth()
                     ) {
                         Spacer(modifier = Modifier.height(36.dp))
-                        CashbackMonitoringSection(uiState,onEventDispatcher)
+                        CashbackMonitoringSection(uiState, onEventDispatcher)
                         Spacer(modifier = Modifier.height(32.dp))
                         FastAccessSection()
                         Spacer(modifier = Modifier.height(16.dp))
@@ -250,7 +256,7 @@ private fun HomeContent(
                         Spacer(modifier = Modifier.height(32.dp))
                         SavedPaymentsSection()
                         Spacer(modifier = Modifier.height(16.dp))
-                        HistorySection()
+                        HistorySection(uiState, onEventDispatcher)
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
@@ -371,10 +377,8 @@ fun CardSection(
 ) {
 //    var totalSum by remember { mutableLongStateOf(100055300) }
     val moneyCurrency by remember { mutableStateOf("UZS") }
-    val moneyVisible by remember { mutableStateOf(true) }
     val animatedBalance by animateIntAsState(
         targetValue = uiState.value.totalBalance.toInt(),
-        label = "",
         animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
     )
 
@@ -393,6 +397,7 @@ fun CardSection(
                 modifier = Modifier
                     .background(color = Color.Transparent, CircleShape)
                     .clip(CircleShape)
+                    .clickable { onEventDispatcher(HomePageContract.Intent.SettingsClick) }
                     .padding(8.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
@@ -417,13 +422,14 @@ fun CardSection(
                     color = Color.White
                 ), modifier = Modifier
                     .align(Alignment.Bottom)
-                    .padding(bottom = 2.dp)
+                    .padding(bottom = 8.dp)
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
             Image(
-                painter = if (moneyVisible) painterResource(id = R.drawable.ic_eye_close_24) else painterResource(id = R.drawable.ic_eye_24),
+                painter = if (uiState.value.isMoneyVisible) painterResource(id = R.drawable.ic_eye_close_24)
+                else painterResource(id = R.drawable.ic_eye_24),
                 contentDescription = "Visibility",
                 modifier = Modifier
                     .background(color = Color.Transparent, CircleShape)
@@ -453,7 +459,7 @@ fun CardSection(
                 ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         Image(
-                            painter = painterResource(R.drawable.ic_limit_card),
+                            painter = painterResource(card.themeType.toCardImage()),
                             contentDescription = "Card background",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
@@ -896,10 +902,7 @@ fun LocalPaymentSection() {
                         .background(color = Color.White, shape = RoundedCornerShape(16.dp))
                         .width(250.dp)
                         .height(100.dp)
-//                        .fillMaxWidth()
-//                        .aspectRatio(7/4f)
                         .padding(16.dp),
-//                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = Modifier
@@ -1090,8 +1093,10 @@ fun SavedPaymentsSection() {
 
 //@Preview
 @Composable
-fun HistorySection() {
-//    Surface(modifier = Modifier.fillMaxSize()) {
+fun HistorySection(
+    uiState: State<HomePageContract.UIState>,
+    onEventDispatcher: (HomePageContract.Intent) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -1115,87 +1120,127 @@ fun HistorySection() {
             Image(
                 painter = painterResource(id = R.drawable.ic_right_round_arrow),
                 contentDescription = "More",
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable { onEventDispatcher(HomePageContract.Intent.MonitoringClick) }
+                    .padding(8.dp)
             )
         }
 
         Column(
             modifier = Modifier
                 .padding(16.dp)
+                .padding(bottom = 32.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(16.dp))
+                .clickable { onEventDispatcher(HomePageContract.Intent.MonitoringClick) }
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            repeat(4) {
-                Row(
+            if (uiState.value.lastTransfersLoading){
+                CircularProgressIndicator(
+                    color = Color.PinkUzum,
+                    strokeCap = StrokeCap.Square,
+                    strokeWidth = 4.dp,
+                    modifier = Modifier.padding(vertical = 8.dp).scale(1f)
+                )
+            }else if (uiState.value.lastTransfers.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.no_history),
+                    fontFamily = fontUzumPro,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 16.sp,
+                    color = Color.BlackUzum,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.atto_logo),
-                        contentDescription = "Logo",
+                    maxLines = 1
+                )
+            } else {
+
+                repeat(3) {
+
+                    val transferInfo = uiState.value.lastTransfers[it]
+
+                    Row(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(14.dp))
-                            .size(40.dp)
-                    )
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_convert_default),
+                            contentDescription = "Logo",
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(14.dp))
+                                .size(40.dp)
+                        )
 
-                    Column(modifier = Modifier.padding(start = 16.dp)) {
-                        Row(verticalAlignment = Alignment.Bottom) {
-                            Text(
-                                text = "ATTO (payment on board)afdla",
-                                fontFamily = fontUzumPro,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 15.sp,
-                                color = Color.BlackUzum,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier
-                                    .weight(7f)
-                                    .padding(end = 16.dp),
-                                maxLines = 1
-                            )
-                            Text(
-                                text = "-1 700.00",
-                                fontFamily = fontUzumPro,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 15.sp,
-                                color = Color.BlackUzum,
-                                modifier = Modifier.weight(3f),
-                                maxLines = 1,
-                                textAlign = TextAlign.End
-                            )
+                        Column(modifier = Modifier.padding(start = 16.dp)) {
+                            Row(verticalAlignment = Alignment.Bottom) {
+                                Text(
+                                    text = if (transferInfo.type == "outcome") transferInfo.to.toPrivatePan()
+                                    else transferInfo.from.toPrivatePan(),
+                                    fontFamily = fontUzumPro,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 15.sp,
+                                    color = Color.BlackUzum,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier
+                                        .weight(7f)
+                                        .padding(end = 16.dp),
+                                    maxLines = 1
+                                )
 
-                        }
-                        Row(verticalAlignment = Alignment.Top) {
-                            Text(
-                                text = "Payment",
-                                fontFamily = fontUzumPro,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 13.sp,
-                                lineHeight = 15.sp,
-                                color = Color.HintUzum,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.padding(end = 16.dp),
-                            )
-                            Text(
-                                text = "25.09.2024 23:49:04",
-                                fontFamily = fontUzumPro,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 13.sp,
-                                lineHeight = 15.sp,
-                                color = Color.HintUzum,
-                                modifier = Modifier.weight(1f),
-                                maxLines = 1,
-                                textAlign = TextAlign.End
-                            )
 
+                                val isIncome = transferInfo.type == "income"
+                                val prefix = if (isIncome) "+" else "-"
+                                val formatted = formatToMoney(transferInfo.amount.toString())
+                                val finalText = "$prefix$formatted"
+                                Text(
+                                    text = finalText,
+                                    fontFamily = fontUzumPro,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 15.sp,
+                                    color = Color.BlackUzum,
+                                    modifier = Modifier.weight(3f),
+                                    maxLines = 1,
+                                    textAlign = TextAlign.End
+                                )
+
+                            }
+                            Row(verticalAlignment = Alignment.Top) {
+                                Text(
+                                    text = "Tansaction",
+                                    fontFamily = fontUzumPro,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 13.sp,
+                                    lineHeight = 15.sp,
+                                    color = Color.HintUzum,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier.padding(end = 16.dp),
+                                )
+                                Text(
+                                    text = transferInfo.time.toTime(),
+                                    fontFamily = fontUzumPro,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 13.sp,
+                                    lineHeight = 15.sp,
+                                    color = Color.HintUzum,
+                                    modifier = Modifier.weight(1f),
+                                    maxLines = 1,
+                                    textAlign = TextAlign.End
+                                )
+
+                            }
                         }
                     }
                 }
-            }
 
+            }
         }
     }
 //    }

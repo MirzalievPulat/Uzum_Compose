@@ -21,7 +21,7 @@ import uz.gita.domain.transferUseCase.GetTransferringCardDetails
 import uz.gita.domain.transferUseCase.SaveLastTransferredCardsUC
 import uz.gita.domain.transferUseCase.SaveTransferringCardDetailsUC
 import uz.gita.domain.transferUseCase.TransferUC
-import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.common.other.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.formatToMoney
 import uz.gita.presentation.helper.extensions.onFailure
 import uz.gita.presentation.helper.extensions.onSuccess
@@ -72,12 +72,13 @@ class TransferFromToVM @Inject constructor(
 
                     if (networkStatusValidator.isNetworkEnabled) {
                         if (sum.value.isNotBlank()) {
-                            if (sum.value.toLong() <= state.fromCard.amount.toLong()) {
-                                val sumWithCommission = formatToMoney(sum.value.toLong() + (sum.value.toLong() * 0.01).toLong())
+                            val sumWithCommission = sum.value.toLong() + (sum.value.toLong() * 0.01).toLong()
+                            if (sumWithCommission <= state.fromCard.amount.toLong()) {
+                                val sumFormatted = formatToMoney(sumWithCommission)
                                 reduce {
                                     state.copy(
                                         sumLoading = true,
-                                        errorSum = Pair("To be debited: $sumWithCommission sum\nCommission 1%", false)
+                                        errorSum = Pair("To be debited: $sumFormatted sum\nCommission 1%", false)
                                     )
                                 }
                             } else {

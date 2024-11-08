@@ -12,7 +12,7 @@ interface EnterPinContract {
     data class UIState(
         val errorAnim:Long = 0,
         val fourDigitCorrect:Boolean = true,
-        val name:String = "Po'lat",
+        val name:String = "",
         val currentCode:String = ""
     )
 

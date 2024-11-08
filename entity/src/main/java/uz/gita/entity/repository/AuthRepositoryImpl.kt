@@ -23,8 +23,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val localStorage: LocalStorage,
 ) : AuthRepository {
     val gson = Gson()
-    override suspend fun signUp(signUp: AuthData.SignUp): Result<Unit> = withContext(Dispatchers.IO) {
-        api.signUp(signUp.toRequest())
+    override suspend fun signUp(signUp: AuthData.SignUp): Result<Unit> {
+        return api.signUp(signUp.toRequest())
             .toResult {
                 localStorage.token = it.token
                 localStorage.name = signUp.firstName

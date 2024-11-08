@@ -83,6 +83,7 @@ import uz.gita.uzumcompose.ui.theme.WhiteBg
 import uz.gita.uzumcompose.ui.theme.fontFamilyUzum
 import uz.gita.uzumcompose.utils.extensions.formatToMoney
 import uz.gita.uzumcompose.utils.extensions.toPrivatePan
+import uz.gita.uzumcompose.utils.helper.Amount2Visual
 import uz.gita.uzumcompose.utils.helper.AmountVisual
 
 class TransferFromToScreen(val name: String, val pan: String) : Screen {
@@ -506,7 +507,7 @@ fun TransferFromToContent(
                         )
                     }
                 },
-                visualTransformation = AmountVisual()
+                visualTransformation = Amount2Visual()
             )
 
             Text(

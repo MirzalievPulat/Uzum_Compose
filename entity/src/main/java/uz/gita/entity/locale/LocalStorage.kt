@@ -17,7 +17,7 @@ class LocalStorage @Inject constructor(@ApplicationContext context: Context) : S
     var cardList:String by strings("[]")
 
     var phone: String by strings()
-    var name: String by strings()
+    var name: String by strings("how are you")
     var isMoneyVisible: Boolean by booleans(true)
 
     var transferringAmount:String by strings("0")

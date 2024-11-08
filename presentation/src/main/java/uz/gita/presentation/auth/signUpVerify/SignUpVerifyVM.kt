@@ -1,6 +1,5 @@
 package uz.gita.presentation.auth.signUpVerify
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,9 +13,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import uz.gita.common.data.AuthData
 import uz.gita.domain.authUseCase.SignUpResendUC
 import uz.gita.domain.authUseCase.SignUpVerifyUC
-import uz.gita.presentation.auth.signInVerify.SignInVerifyContract
-import uz.gita.presentation.auth.signUp.SignUpContract
-import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.common.other.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.onFailure
 import uz.gita.presentation.helper.extensions.onSuccess
 

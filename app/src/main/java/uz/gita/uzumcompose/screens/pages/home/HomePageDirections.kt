@@ -3,6 +3,7 @@ package uz.gita.uzumcompose.screens.pages.home
 import uz.gita.common.data.CardData
 import uz.gita.presentation.pages.home.HomePageContract
 import uz.gita.uzumcompose.screens.card.addCardScreen.AddCardScreen
+import uz.gita.uzumcompose.screens.card.settingsCard.SettingsCardScreen
 import uz.gita.uzumcompose.screens.card.updateCard.UpdateCardScreen
 import uz.gita.uzumcompose.screens.history.HistoryScreen
 import uz.gita.uzumcompose.screens.profile.ProfileScreen
@@ -21,5 +22,9 @@ class HomePageDirections @Inject constructor(private val appNavigator: AppNaviga
 
     override suspend fun goMonitoring() {
         appNavigator.navigateTo(HistoryScreen())
+    }
+
+    override suspend fun goSettingsCard() {
+        appNavigator.navigateTo(SettingsCardScreen())
     }
 }

@@ -41,6 +41,7 @@ class AuthAuthenticator @Inject constructor(
             else {
                 val newSessionResponse = runBlocking { oAuthApi.updateToken(AuthRequest.UpdateToken(localStorage.refreshToken)) }
                 if (newSessionResponse.isSuccessful && newSessionResponse.body() != null) {
+                    Log.d("TTT", "authenticate success: synchronized ichi")
                     newSessionResponse.body()?.let { body ->
                         runBlocking {
                             localStorage.accessToken = body.accessToken

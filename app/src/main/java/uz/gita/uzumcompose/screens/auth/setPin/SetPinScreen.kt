@@ -160,20 +160,21 @@ fun SetPinContent(
             horizontalArrangement = Arrangement.Absolute.SpaceBetween
         ) {
 
-            Icon(
-                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                contentDescription = "Back arrow",
-//                tint = if (uiState.value.isSecondTime) Color.Black else Color.Transparent,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(
-                        enabled = uiState.value.isSecondTime,
-                        onClick = {
-                            onEventDispatcher(SetPinContract.Intent.ClickBack)
-                        }
-                    )
-                    .padding(8.dp)
-            )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                    contentDescription = "Back arrow",
+                tint = if (uiState.value.isSecondTime) Color.Black else Color.Transparent,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(
+                            enabled = uiState.value.isSecondTime,
+                            onClick = {
+                                onEventDispatcher(SetPinContract.Intent.ClickBack)
+                            }
+                        )
+                        .padding(8.dp)
+                )
+
         }
 
         Spacer(modifier = Modifier.height(72.dp))

@@ -13,9 +13,10 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import uz.gita.domain.cardUseCase.GetCardsUC
 import uz.gita.domain.homeUseCase.GetIsMoneyVisibleUC
+import uz.gita.domain.homeUseCase.GetLastTransfersUC
 import uz.gita.domain.homeUseCase.GetTotalBalanceUC
 import uz.gita.domain.homeUseCase.SetIsMoneyVisibleUC
-import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.common.other.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.onFailure
 import uz.gita.presentation.helper.extensions.onSuccess
 import javax.inject.Inject
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class HomePageVM @Inject constructor(
     private val getTotalBalanceUC: GetTotalBalanceUC,
     private val getCardsUC: GetCardsUC,
+    private val getLastTransfers:GetLastTransfersUC,
     private val directions: HomePageContract.Direction,
     private val getIsMoneyVisibleUC: GetIsMoneyVisibleUC,
     private val setIsMoneyVisibleUC: SetIsMoneyVisibleUC,
@@ -48,7 +50,6 @@ class HomePageVM @Inject constructor(
             }
             HomePageContract.Intent.EyeClick -> {
                 reduce { state.copy(isMoneyVisible = !state.isMoneyVisible) }
-                Log.d("TAG", "onEventDispatcher: isMoneyVisible:${state.isMoneyVisible}")
                 setIsMoneyVisibleUC(state.isMoneyVisible).launchIn(viewModelScope)
             }
             is HomePageContract.Intent.CardClick->{
@@ -62,6 +63,10 @@ class HomePageVM @Inject constructor(
                 directions.goProfileScreen()
             }
 
+            HomePageContract.Intent.SettingsClick->{
+                directions.goSettingsCard()
+            }
+
             HomePageContract.Intent.MonitoringClick->{
                 directions.goMonitoring()
             }
@@ -70,14 +75,13 @@ class HomePageVM @Inject constructor(
 
     private fun updateScreen(){
         if (networkStatusValidator.isNetworkEnabled || firstEntrance){
-            Log.d("TAG", "updateScreen: kirdi ichiga")
             getTotalBalanceUC()
                 .onStart {  }
                 .onSuccess {
                     Log.d("TAG", "updateScreen: Home pageVM: totalBalance:$it")
                     intent { reduce { state.copy(totalBalance = it.balance) } }
                 }
-                .onFailure { Log.d("TAG", "homepage updateScreen: ${it.message}") }
+                .onFailure { Log.d("TAG", "homepage updateScreen totalBalance error: ${it.message}") }
                 .onCompletion {
                     delay(1000)
                     intent { reduce { state.copy(isLoading = false ) } }
@@ -86,16 +90,28 @@ class HomePageVM @Inject constructor(
 
             getIsMoneyVisibleUC()
                 .onSuccess { intent { reduce { state.copy(isMoneyVisible = it) } };Log.d("TAG", "updateScreen: isMoneyVisible:$it") }
-                .onFailure { Log.d("TAG", "homepage updateScreen: ${it.message}") }
+                .onFailure { Log.d("TAG", "homepage updateScreen  ismoney visible error: ${it.message}") }
                 .launchIn(viewModelScope)
 
             getCardsUC()
                 .onSuccess {
-                    Log.d("TAG", "updateScreen: Home pageVM: list:$it")
+                    Log.d("TAG", "updateScreen: Home pageVM: card list:$it")
 //                    val visibleCards =  it.filter { it.isVisible.toBoolean() }
                     intent { reduce { state.copy(cardList = it) } }
                 }
-                .onFailure { Log.d("TAG", "homepage updateScreen: ${it.message}") }
+                .onFailure { Log.d("TAG", "homepage updateScreen card list error: ${it.message}") }
+                .launchIn(viewModelScope)
+
+            getLastTransfers()
+                .onStart {
+                    intent { reduce { state.copy(lastTransfersLoading = true) } }
+                }
+                .onSuccess {
+                    Log.d("TAG", "lastTransfers home page: $it")
+                    intent { reduce { state.copy(lastTransfers = it.takeLast(3)) } }
+                }
+                .onFailure { Log.d("TAG", "homepage updateScreen lastTransfers error: ${it.message}") }
+                .onCompletion { intent { reduce { state.copy(lastTransfersLoading = false) } } }
                 .launchIn(viewModelScope)
 
             firstEntrance = false
@@ -104,4 +120,6 @@ class HomePageVM @Inject constructor(
         }
 
     }
+
+
 }

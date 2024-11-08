@@ -26,12 +26,13 @@ class EnterPinVM @Inject constructor(
     private val getNameUC: GetNameUC
 ) : ViewModel(), EnterPinContract.ViewModel {
     private var code = "0000"
-    private var name = "Po'lat"
+//    private var name = ""
 
     init {
         getNameUC()
             .onSuccess {
-                name = it
+                Log.d("TAG", "getNameUC() EnterPinVM: $it")
+                intent { reduce { state.copy(name = it) } }
             }
             .onFailure {
                 Log.d("TAG", "getBasicInfoUC: error: ${it.message}")
@@ -49,7 +50,7 @@ class EnterPinVM @Inject constructor(
     }
 
     override val container = container<EnterPinContract.UIState,
-            EnterPinContract.SideEffect>(EnterPinContract.UIState().copy(name = name))
+            EnterPinContract.SideEffect>(EnterPinContract.UIState())
 
 
     override fun onEventDispatcher(intent: EnterPinContract.Intent) = intent {

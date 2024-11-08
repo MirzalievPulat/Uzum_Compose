@@ -1,7 +1,7 @@
 package uz.gita.presentation.auth.signInVerify
 
 import org.orbitmvi.orbit.ContainerHost
-import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.common.other.NetworkStatusValidator
 import kotlin.random.Random
 
 interface SignInVerifyContract {

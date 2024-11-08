@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import uz.gita.common.data.HomeData
+import uz.gita.entity.extension.LocalCacheControlValue
 import uz.gita.entity.extension.toResult
 import uz.gita.entity.locale.LocalStorage
 import uz.gita.entity.model.mapper.toRequest
@@ -25,13 +26,13 @@ class HomeRepositoryImpl @Inject constructor(
 
     override fun getTotalBalance(): Flow<Result<HomeData.TotalBalance>> = flow {
 
-        emit(Result.success(HomeData.TotalBalance(storage.lastTotalBalance)))
+//        emit(Result.success(HomeData.TotalBalance(storage.lastTotalBalance)))//cache with shared
         val response = homeApi.getTotalBalance()
 
         if (response.isSuccessful && response.body() != null) {
             Log.d("TAG", "getTotalBalance: Home repository totalBalance:${response.body()}")
             emit(Result.success(response.body()!!.toResponse()))
-            storage.lastTotalBalance = response.body()!!.totalBalance
+            storage.lastTotalBalance = response.body()!!.totalBalance//cache with shared
         } else if (response.errorBody() != null) {
             val errorMessage = gson.fromJson(response.errorBody()!!.string(), ErrorMessage::class.java)
             emit(Result.failure(Exception(errorMessage.message)))
@@ -60,20 +61,30 @@ class HomeRepositoryImpl @Inject constructor(
     override fun updateInfo(updateInfo: HomeData.UpdateInfo): Flow<Result<HomeData.UpdateInfoResponse>> = flow {
         val result = homeApi.updateInfo(updateInfo.toRequest()).toResult {
             storage.name = updateInfo.firstName
+            Log.d("TAG", "updateInfo: starage.name:${storage.name}")
             it.toResponse()
         }
         emit(result)
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)
 
+
     override fun lastTransfers(): Flow<Result<List<HomeData.TransferInfo>>> = flow {
-        val result = homeApi.lastTransfers().toResult {
-            Log.d("TAG", "lastTransfers: $it")
+        val result1 = homeApi.lastTransfers(LocalCacheControlValue.Cache).toResult {
+            Log.d("TAG", "lastTransfers: $it")// from cache
             it.map { it.toResponse() }
         }
-        emit(result)
+        emit(result1)
+
+
+        val result2 = homeApi.lastTransfers(LocalCacheControlValue.Network).toResult {
+            Log.d("TAG", "lastTransfers: $it")// from network
+            it.map { it.toResponse() }
+        }
+        emit(result2)
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)
 
-    override fun setMoneyVisible(isVisible: Boolean): Flow<Result<Unit>> = flow{
+
+    override fun setMoneyVisible(isVisible: Boolean): Flow<Result<Unit>> = flow {
         storage.isMoneyVisible = isVisible
         emit(Result.success(Unit))
     }.catch { emit(Result.failure(it)) }.flowOn(Dispatchers.IO)

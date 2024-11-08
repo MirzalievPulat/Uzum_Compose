@@ -1,4 +1,4 @@
-package uz.gita.presentation.helper
+package uz.gita.common.other
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -9,6 +9,10 @@ import android.util.Log
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+
+//import dagger.hilt.android.qualifiers.ApplicationContext
+//import javax.inject.Inject
+//import javax.inject.Singleton
 
 @Singleton
 class NetworkStatusValidator @Inject constructor(@ApplicationContext val context: Context) {

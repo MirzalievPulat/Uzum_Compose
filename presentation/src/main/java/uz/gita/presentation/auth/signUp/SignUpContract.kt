@@ -1,9 +1,8 @@
 package uz.gita.presentation.auth.signUp
 
 import org.orbitmvi.orbit.ContainerHost
-import uz.gita.common.data.CardData
 import uz.gita.common.other.GenderType
-import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.common.other.NetworkStatusValidator
 
 interface SignUpContract {
 

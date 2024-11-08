@@ -16,10 +16,9 @@ import uz.gita.domain.homeUseCase.GetFullInfoUC
 import uz.gita.domain.homeUseCase.UpdateInfoUC
 import uz.gita.domain.validatorUseCase.FirstNameValidatorUC
 import uz.gita.domain.validatorUseCase.LastNameValidatorUC
-import uz.gita.presentation.helper.NetworkStatusValidator
+import uz.gita.common.other.NetworkStatusValidator
 import uz.gita.presentation.helper.extensions.onFailure
 import uz.gita.presentation.helper.extensions.onSuccess
-import uz.gita.presentation.helper.extensions.toDate
 import javax.inject.Inject
 
 @HiltViewModel

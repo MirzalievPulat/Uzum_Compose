@@ -1,20 +1,20 @@
 package uz.gita.uzumcompose
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.lifecycleScope
 import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
-import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
 import cafe.adriel.voyager.transitions.SlideTransition
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import uz.gita.presentation.helper.NetworkStatusValidator
-import uz.gita.uzumcompose.screens.auth.enterPin.EnterPinScreen
+import uz.gita.Random
+import uz.gita.common.other.NetworkStatusValidator
 import uz.gita.uzumcompose.screens.auth.splash.SplashScreen
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
 import uz.gita.uzumcompose.utils.navigation.NavigationHandler
@@ -38,6 +38,9 @@ class MainActivity : ComponentActivity() {
             onAvailable = {},
             onLost = {}
         )
+
+        val random = Random()
+        Toast.makeText(this, random.getInfo(), Toast.LENGTH_SHORT).show()
 
         setContent {
             UzumComposeTheme {

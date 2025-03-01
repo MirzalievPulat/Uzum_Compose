@@ -9,5 +9,4 @@ class EnterPinDirections @Inject constructor(private val appNavigator: AppNaviga
     override suspend fun moveToMainScreen() {
         appNavigator.replaceAll(MainScreen())
     }
-
 }

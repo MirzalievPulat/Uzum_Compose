@@ -13,7 +13,6 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import uz.gita.Random
 import uz.gita.common.other.NetworkStatusValidator
 import uz.gita.uzumcompose.screens.auth.splash.SplashScreen
 import uz.gita.uzumcompose.ui.theme.UzumComposeTheme
@@ -39,8 +38,6 @@ class MainActivity : ComponentActivity() {
             onLost = {}
         )
 
-        val random = Random()
-        Toast.makeText(this, random.getInfo(), Toast.LENGTH_SHORT).show()
 
         setContent {
             UzumComposeTheme {

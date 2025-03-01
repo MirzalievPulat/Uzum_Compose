@@ -9,7 +9,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
-import uz.gita.entity.di.Auth
+//import uz.gita.entity.di.Auth
 import uz.gita.entity.extension.LocalCacheControl
 import uz.gita.entity.extension.LocalCacheControlValue
 import uz.gita.entity.model.request.CardRequest

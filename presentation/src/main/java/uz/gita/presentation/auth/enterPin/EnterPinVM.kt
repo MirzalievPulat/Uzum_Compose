@@ -85,7 +85,6 @@ class EnterPinVM @Inject constructor(
                     reduce { state.copy(currentCode = "") }
                 }
             }
-
         }
     }
 }

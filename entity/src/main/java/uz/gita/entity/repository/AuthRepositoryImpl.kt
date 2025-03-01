@@ -29,6 +29,7 @@ class AuthRepositoryImpl @Inject constructor(
                 localStorage.token = it.token
                 localStorage.name = signUp.firstName
             }
+
     }
 
     override fun signIn(signIn: AuthData.SignIn): Flow<Result<Unit>> = flow {

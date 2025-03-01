@@ -243,12 +243,12 @@ private fun HomeContent(
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
-                        Spacer(modifier = Modifier.height(36.dp))
-                        CashbackMonitoringSection(uiState, onEventDispatcher)
-                        Spacer(modifier = Modifier.height(32.dp))
-                        FastAccessSection()
-                        Spacer(modifier = Modifier.height(16.dp))
-                        BillBoardSection()
+//                        Spacer(modifier = Modifier.height(36.dp))
+//                        CashbackMonitoringSection(uiState, onEventDispatcher)
+//                        Spacer(modifier = Modifier.height(32.dp))
+//                        FastAccessSection()
+//                        Spacer(modifier = Modifier.height(16.dp))
+//                        BillBoardSection()
                         Spacer(modifier = Modifier.height(18.dp))
                         LocalPaymentSection()
                         Spacer(modifier = Modifier.height(16.dp))

@@ -95,7 +95,8 @@ class NetworkModule {
 
     @[Provides Singleton]
     fun providesRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl("http://195.158.16.140/mobile-bank/")
+        .baseUrl("http://185.193.17.169:8080/mobile-bank/")
+//        .baseUrl("http://195.158.16.140/mobile-bank/")
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
@@ -103,7 +104,7 @@ class NetworkModule {
     @[Provides Singleton]
     @Named("NoAuthenticator")
     fun providesRetrofitNoAuth(@Named("JustChucker") okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
-        .baseUrl("http://195.158.16.140/mobile-bank/")
+        .baseUrl("http://185.193.17.169:8080/mobile-bank/")
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
